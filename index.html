@@ -3,715 +3,912 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cotizador / Precio de Venta</title>
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<title>Calculadora de Precio de Venta | COSEINCO</title>
 <style>
-    body { font-family: 'Inter', sans-serif; }
-    .tab-active { border-bottom: 2px solid #1c2d42; color: #1c2d42; font-weight: 500; }
-    .modal-overlay { background: rgba(28,45,66,0.45); }
-    .tc-input { width: 64px; }
+  :root{
+    --bg:#f4f6f9; --panel:#ffffff; --panel2:#f8fafc; --line:#e2e8f0;
+    --txt:#1e293b; --txt-muted:#64748b; --blue:#1A86F1; --blue-dark:#106FCC;
+    --navy:#152B44; --green:#16a34a; --green-dark:#15803d; --red:#dc2626; --amber:#d97706;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;font-size:13.5px}
+  h1,h2,h3{margin:0;font-weight:700}
+  .wrap{max-width:1500px;margin:0 auto;padding:18px}
+
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:16px;padding:16px 22px;margin-bottom:14px;box-shadow:0 2px 10px rgba(21,43,68,.06)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand-logo{width:50px;height:50px;flex-shrink:0}
+  .brand h1{font-size:18px;letter-spacing:.3px;color:var(--navy)}
+  .brand p{margin:2px 0 0;font-size:11px;color:var(--txt-muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+  .quick-note{display:flex;flex-direction:column;gap:4px;min-width:260px}
+  .quick-note label{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--txt-muted);font-weight:600}
+  .quick-note input{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;
+    color:var(--txt);font-size:13px;outline:none;transition:.15s}
+  .quick-note input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,134,241,.12)}
+  .quick-note input:disabled{opacity:.55;cursor:not-allowed}
+
+  .status-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 18px;margin-bottom:18px;
+    box-shadow:0 2px 10px rgba(21,43,68,.05)}
+  .status-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .status-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:999px;
+    font-size:11.5px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+  .status-badge.editing{background:rgba(26,134,241,.1);color:var(--blue-dark);border:1px solid rgba(26,134,241,.3)}
+  .status-badge.saved{background:rgba(22,163,74,.1);color:var(--green-dark);border:1px solid rgba(22,163,74,.3)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:18px;
+    box-shadow:0 2px 10px rgba(21,43,68,.05)}
+  .card h2{font-size:13.5px;color:var(--navy);display:flex;align-items:center;gap:8px;margin-bottom:14px;
+    text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--blue);padding-bottom:10px}
+
+  .grid{display:grid;gap:14px}
+  .grid-6{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .grid-4{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+  .field label{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt-muted);
+    margin-bottom:5px;font-weight:600}
+  .field input,.field select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    padding:9px 10px;color:var(--txt);font-size:13px;outline:none;transition:.15s}
+  .field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,134,241,.12);background:#fff}
+  .field input:disabled,.field select:disabled{opacity:.5;cursor:not-allowed}
+  .field .hint{font-size:10px;color:var(--txt-muted);margin-top:3px}
+
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border:none;border-radius:10px;
+    font-weight:700;font-size:13px;cursor:pointer;transition:.15s;white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn-blue{background:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(26,134,241,.28)}
+  .btn-blue:hover:not(:disabled){background:var(--blue-dark)}
+  .btn-green{background:var(--green);color:#fff;box-shadow:0 3px 10px rgba(22,163,74,.25)}
+  .btn-green:hover:not(:disabled){background:var(--green-dark)}
+  .btn-ghost{background:#fff;color:var(--txt);border:1px solid var(--line)}
+  .btn-ghost:hover:not(:disabled){border-color:var(--blue);color:var(--blue-dark)}
+  .btn-sm{padding:7px 12px;font-size:11.5px;border-radius:8px}
+  .btn-danger{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.25)}
+  .btn-danger:hover:not(:disabled){background:rgba(220,38,38,.15)}
+  .btn-navy{background:var(--navy);color:#fff}
+  .btn-navy:hover:not(:disabled){background:#0d1e33}
+
+  .form-actions{display:flex;justify-content:flex-end;margin-top:14px}
+  .chk-row{display:flex;align-items:center;gap:8px;padding-top:22px}
+  .chk-row input{width:17px;height:17px;accent-color:var(--blue);cursor:pointer}
+  .chk-row label{font-size:12.5px;color:var(--txt);cursor:pointer}
+
+  .tbl-outer{transform:rotateX(180deg);overflow-x:auto;border-radius:12px;border:1px solid var(--line)}
+  .tbl-inner{transform:rotateX(180deg)}
+  .tbl-outer::-webkit-scrollbar{height:11px}
+  .tbl-outer::-webkit-scrollbar-track{background:var(--panel2)}
+  .tbl-outer::-webkit-scrollbar-thumb{background:var(--blue);border-radius:8px}
+  .tbl-outer::-webkit-scrollbar-thumb:hover{background:var(--blue-dark)}
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:1400px}
+  thead th{background:var(--panel2);color:var(--navy);padding:10px 9px;text-align:left;font-weight:700;
+    white-space:nowrap;position:sticky;top:0;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;
+    border-bottom:1.5px solid var(--line)}
+  tbody td{padding:8px 9px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tbody tr:hover td{background:rgba(26,134,241,.04)}
+  .num{text-align:right;font-variant-numeric:tabular-nums}
+  .tag{display:inline-block;font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:999px;letter-spacing:.3px}
+  .tag-T{background:rgba(26,134,241,.12);color:var(--blue-dark)}
+  .tag-L{background:rgba(124,58,237,.12);color:#7c3aed}
+  .tag-S{background:rgba(22,163,74,.12);color:var(--green-dark)}
+  .tag-V{background:rgba(217,119,6,.12);color:var(--amber)}
+  .prov-best{color:var(--green-dark);font-weight:800;font-size:11px}
+  .g-pos{color:var(--green-dark);font-weight:700}
+  .g-neg{color:var(--red);font-weight:700}
+  .cell-input{width:60px;background:transparent;border:none;border-bottom:1px dashed var(--line);color:var(--txt);
+    padding:2px 3px;font-size:11.5px;text-align:right}
+  .cell-input:focus{outline:none;border-color:var(--blue)}
+  .cell-input:disabled{opacity:.5;cursor:not-allowed}
+  .row-chk{width:15px;height:15px;accent-color:var(--green);cursor:pointer}
+  .row-chk:disabled{opacity:.4;cursor:not-allowed}
+
+  .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:16px}
+  .sum-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .sum-card .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt-muted);font-weight:700}
+  .sum-card .val{font-size:19px;font-weight:800;margin-top:5px;color:var(--navy)}
+  .sum-card.accent{border-color:rgba(26,134,241,.35)}
+  .sum-card.accent .val{color:var(--blue-dark)}
+  .sum-card.gain{border-color:rgba(22,163,74,.35)}
+  .sum-card.gain .val{color:var(--green-dark)}
+
+  .esc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+  .esc-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:13px}
+  .esc-card h4{font-size:11px;color:var(--txt-muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+  .esc-card .row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+  .esc-card .row b{color:var(--txt)}
+  .esc-card .pv{color:var(--blue-dark);font-weight:800;font-size:15px}
+  .esc-card .gan{color:var(--green-dark);font-weight:800;font-size:14px}
+
+  .hist-empty{text-align:center;padding:34px 10px;color:var(--txt-muted)}
+  .hist-empty .ic{font-size:26px;margin-bottom:8px;opacity:.5}
+
+  footer{text-align:center;color:var(--txt-muted);font-size:11px;padding:20px 0}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(21,43,68,.45);display:none;
+    align-items:center;justify-content:center;z-index:9999;padding:20px}
+  .modal-overlay.show{display:flex}
+  .modal-box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;
+    max-width:380px;width:100%;box-shadow:0 20px 60px rgba(21,43,68,.25)}
+  .modal-box p{margin:0 0 18px;font-size:13.5px;color:var(--txt);line-height:1.5}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end}
 </style>
 </head>
-<body class="bg-blue-50 text-slate-800 min-h-screen p-6 md:p-12">
+<body>
+<div class="wrap">
 
-<main class="max-w-6xl mx-auto bg-white border border-blue-100 rounded-xl shadow-xs overflow-hidden">
-
-    <header class="border-b border-blue-100 bg-slate-50/60 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="flex items-center gap-4">
-            <label for="logoUpload" class="shrink-0 cursor-pointer group" title="Cargar logo de la empresa">
-                <div id="logoPlaceholder" class="h-12 w-12 rounded-lg border border-dashed border-blue-300 flex items-center justify-center text-blue-400 group-hover:border-blue-500 group-hover:text-blue-500 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 7.5L12 3m0 0L7.5 7.5M12 3v13.5" />
-                    </svg>
-                </div>
-                <img id="logoPreview" src="" alt="Logo" class="hidden h-12 max-w-[160px] object-contain rounded-lg">
-                <input type="file" id="logoUpload" accept="image/*" class="hidden" onchange="handleLogoUpload(event)">
-            </label>
-            <div>
-                <h1 class="text-xl font-light tracking-tight text-slate-900">Cotizador / Precio de Venta</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Control de costos y márgenes reales por operación.</p>
-            </div>
-        </div>
-
-        <div class="flex gap-6 text-sm text-slate-400 self-stretch md:self-auto border-b md:border-b-0 border-blue-100">
-            <button id="tabBtnEditor" onclick="switchTab('editor')" class="pb-2 md:pb-0 tab-active cursor-pointer">Nueva Cotización</button>
-            <button id="tabBtnHistory" onclick="switchTab('history')" class="pb-2 md:pb-0 cursor-pointer">Historial</button>
-        </div>
-    </header>
-
-    <div id="viewEditor" class="p-6 space-y-8">
-
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 bg-slate-50 border border-blue-100 rounded-lg gap-4">
-            <div class="flex items-center gap-3">
-                <label class="text-xs uppercase tracking-wider text-slate-500 font-medium">Margen Real Deseado:</label>
-                <div class="flex items-center bg-white border border-blue-200 rounded px-2 py-1">
-                    <input type="number" id="globalMargin" value="20" class="w-12 text-right font-medium focus:outline-none" oninput="calculateCurrentQuote()">
-                    <span class="ml-1 text-xs text-slate-400">%</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <label class="text-xs uppercase tracking-wider text-slate-500 font-medium">T.C. Global (Totales $):</label>
-                <div class="flex items-center bg-white border border-blue-200 rounded px-2 py-1">
-                    <input type="number" id="globalTC" value="3.75" step="0.001" min="0" class="w-16 text-right font-medium focus:outline-none" oninput="calculateCurrentQuote()">
-                </div>
-            </div>
-
-            <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto justify-end">
-                <span id="lblNextQuoteId" class="text-sm font-semibold text-blue-700 bg-blue-100/70 px-2.5 py-1 rounded">Cotización 1000</span>
-                <input type="text" id="quoteNote" placeholder="Texto corto / Cliente (Opcional)" class="text-xs border border-blue-200 bg-white rounded px-3 py-1.5 w-full sm:w-56 focus:outline-none focus:border-blue-500">
-                <button onclick="saveCurrentQuoteToArray()" class="bg-blue-700 text-white text-xs px-4 py-1.5 rounded font-medium hover:bg-blue-600 transition-colors cursor-pointer w-full sm:w-auto">Guardar Cotización</button>
-            </div>
-        </div>
-
-        <div class="border border-blue-100 rounded-lg p-5 bg-white">
-            <h2 id="formTitle" class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-4">Ingresar Parámetros de Producto</h2>
-            <form id="productForm" onsubmit="handleProductSubmit(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                <input type="hidden" id="editingProductId">
-
-                <div>
-                    <label class="block text-slate-500 mb-1">Nombre del Producto</label>
-                    <input type="text" id="pName" required placeholder="Ej. Laptop HP 250" class="w-full border border-blue-200 rounded p-2 focus:outline-none focus:border-blue-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Proveedor</label>
-                    <select id="pSupplier" class="w-full border border-blue-200 rounded p-2 bg-white focus:outline-none focus:border-blue-500 text-sm">
-                        <option value="Ingram">Ingram (Flete S/. 70)</option>
-                        <option value="Deltron">Deltron (Flete S/. 30)</option>
-                        <option value="Intcomex">Intcomex (Flete S/. 35)</option>
-                        <option value="Otros">Otros (Flete S/. 40)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Precio Compra ($)</label>
-                    <input type="number" id="pPrice" required min="0" step="0.01" placeholder="0.00" class="w-full border border-blue-200 rounded p-2 focus:outline-none focus:border-blue-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">T.C. (Tipo de Cambio)</label>
-                    <input type="number" id="pTC" min="0" step="0.001" placeholder="Ej. 3.75" class="w-full border border-blue-200 rounded p-2 focus:outline-none focus:border-blue-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Grupo Ensamblaje (Opcional)</label>
-                    <input type="text" id="pAssembly" placeholder="Ej. CPU_ARMADA" class="w-full border border-blue-200 rounded p-2 focus:outline-none focus:border-blue-500 text-sm">
-                </div>
-                <div>
-                    <label class="block text-slate-500 mb-1">Mano de Obra Total Grupo (S/.)</label>
-                    <input type="number" id="pLabor" min="0" step="0.01" placeholder="0.00" class="w-full border border-blue-200 rounded p-2 focus:outline-none focus:border-blue-500 text-sm">
-                </div>
-                <div class="flex items-center justify-start pt-5 pl-1">
-                    <label class="flex items-center gap-2 text-slate-600 select-none cursor-pointer">
-                        <input type="checkbox" id="pIsTangible" checked class="w-4 h-4 border-blue-200 text-blue-700 rounded focus:ring-0">
-                        ¿Es producto tangible?
-                    </label>
-                </div>
-
-                <div class="md:col-span-3 flex justify-end gap-2 border-t border-blue-50 pt-3 mt-1">
-                    <button type="button" id="btnCancelEdit" onclick="clearProductForm()" class="hidden px-4 py-2 border border-blue-200 rounded text-slate-600 hover:bg-slate-50 cursor-pointer">Cancelar</button>
-                    <button type="submit" id="btnSubmitProduct" class="px-5 py-2 bg-blue-700 text-white rounded font-medium hover:bg-blue-600 cursor-pointer">Añadir Ítem</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="border border-blue-100 rounded-lg overflow-hidden bg-white">
-            <div class="p-4 bg-slate-50 border-b border-blue-100 flex justify-between items-center">
-                <h3 class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Estructura Detallada de Costos e Ítems</h3>
-                <span id="badgeCount" class="text-[11px] bg-blue-100 text-blue-700 px-2 py-0.5 rounded font-medium">0 Productos</span>
-            </div>
-            <div class="overflow-x-auto text-sm">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50/70 border-b border-blue-100 text-slate-400 text-xs uppercase tracking-wider">
-                            <th class="p-4 font-medium">Producto / Info</th>
-                            <th class="p-4 font-medium text-right">P. Compra ($)</th>
-                            <th class="p-4 font-medium text-right">T.C.</th>
-                            <th class="p-4 font-medium text-right">P. Compra (S/.)</th>
-                            <th class="p-4 font-medium text-right">Flete Prop. (S/.)</th>
-                            <th class="p-4 font-medium text-right">M.O. Prop. (S/.)</th>
-                            <th class="p-4 font-medium text-right text-slate-900 font-semibold">P. Venta Sugerido (S/.)</th>
-                            <th class="p-4 font-medium text-right text-slate-900 font-semibold">P. V. Unitario ($)</th>
-                            <th class="p-4 font-medium text-center">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="currentQuoteTableBody" class="divide-y divide-blue-50 text-slate-700"></tbody>
-                </table>
-            </div>
-            <div class="p-4 bg-blue-900 text-white flex flex-col gap-1">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs uppercase tracking-wider text-blue-200 font-medium">Total Acumulado de la Operación (S/.)</span>
-                    <span id="lblCurrentTotal" class="text-xl font-light">S/. 0.00</span>
-                </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-xs uppercase tracking-wider text-blue-200 font-medium">Total Acumulado de la Operación ($)</span>
-                    <span id="lblCurrentTotalUSD" class="text-base font-light text-blue-100">$ 0.00</span>
-                </div>
-            </div>
-        </div>
+  <header>
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="barGrad" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stop-color="#106FCC"></stop>
+            <stop offset="100%" stop-color="#1A86F1"></stop>
+          </linearGradient>
+        </defs>
+        <path d="M158 44 A82 82 0 1 0 158 156" stroke="#152B44" stroke-width="22" fill="none" stroke-linecap="round"></path>
+        <path d="M140 64 A55 55 0 1 0 140 136" stroke="#152B44" stroke-width="18" fill="none" stroke-linecap="round"></path>
+        <rect x="80" y="118" width="24" height="42" rx="3" fill="url(#barGrad)"></rect>
+        <rect x="112" y="98" width="24" height="62" rx="3" fill="url(#barGrad)"></rect>
+        <rect x="144" y="72" width="24" height="88" rx="3" fill="url(#barGrad)"></rect>
+        <circle cx="118" cy="90" r="3.5" fill="#1A86F1"></circle>
+        <circle cx="150" cy="64" r="3.5" fill="#1A86F1"></circle>
+      </svg>
+      <div>
+        <h1>Calculadora de Precio de Venta</h1>
+        <p>Coseinco Soluciones Tecnologicas</p>
+      </div>
     </div>
-
-    <div id="viewHistory" class="p-6 space-y-6 hidden">
-        <h2 class="text-xs uppercase tracking-wider text-slate-400 font-semibold border-b border-blue-50 pb-2">Registro General Histórico</h2>
-
-        <div class="border border-blue-100 rounded-lg overflow-hidden bg-white">
-            <div class="overflow-x-auto text-sm">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-slate-50 border-b border-blue-100 text-slate-400 text-xs uppercase tracking-wider">
-                            <th class="p-4 font-medium">Identificador</th>
-                            <th class="p-4 font-medium">Fecha</th>
-                            <th class="p-4 font-medium">Texto Corto / Nota</th>
-                            <th class="p-4 font-medium text-center">Cant. Ítems</th>
-                            <th class="p-4 font-medium text-right">Margen Real</th>
-                            <th class="p-4 font-medium text-right">Monto Total (S/.)</th>
-                            <th class="p-4 font-medium text-right">Monto Total ($)</th>
-                            <th class="p-4 font-medium text-center">Operaciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTableBody" class="divide-y divide-blue-50 text-slate-700"></tbody>
-                </table>
-            </div>
-        </div>
+    <div class="quick-note">
+      <label>Cliente / N. Cotizacion / Nota Rapida</label>
+      <input type="text" id="notaRapida" class="lockable" placeholder="Ej: S04000" oninput="recalcularTodo()">
     </div>
-</main>
+  </header>
 
-<!-- Modal de confirmación / alerta (reemplaza alert()/confirm() nativos) -->
-<div id="modalOverlay" class="fixed inset-0 modal-overlay hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg shadow-lg max-w-sm w-full p-6">
-        <p id="modalMessage" class="text-sm text-slate-700 mb-5"></p>
-        <div id="modalButtons" class="flex justify-end gap-2"></div>
+  <div class="status-bar">
+    <span class="status-badge editing" id="statusBadge">Editando</span>
+    <div class="status-actions">
+      <button class="btn btn-green btn-sm" id="btnGuardar" onclick="guardarCotizacion()">Guardar</button>
+      <button class="btn btn-ghost btn-sm" id="btnEditar" onclick="editarCotizacion()" disabled>Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="nuevaCotizacion()">Nueva Cotizacion</button>
     </div>
-</div>
+  </div>
 
-<script>
-    // Flete fijo por proveedor, ahora expresado en Soles (S/.)
-    const FREIGHT_BASE = { 'Ingram': 70, 'Deltron': 30, 'Intcomex': 35, 'Otros': 40 };
-    const DEFAULT_TC = 3.75;
-
-    // Estado en memoria (sin localStorage: no soportado en este entorno)
-    let currentQuoteProducts = [
-        { id: 1, name: 'Mouse', supplier: 'Ingram', purchasePrice: 10, tc: DEFAULT_TC, isTangible: true, assemblyGroup: '', baseLabor: 0 },
-        { id: 2, name: 'Laptop HP 250', supplier: 'Deltron', purchasePrice: 1000, tc: DEFAULT_TC, isTangible: true, assemblyGroup: '', baseLabor: 0 },
-        { id: 3, name: 'CPU (Placa Madre)', supplier: 'Deltron', purchasePrice: 800, tc: DEFAULT_TC, isTangible: true, assemblyGroup: 'CPU_ARMADA', baseLabor: 100 },
-        { id: 4, name: 'CPU (Procesador)', supplier: 'Deltron', purchasePrice: 500, tc: DEFAULT_TC, isTangible: true, assemblyGroup: 'CPU_ARMADA', baseLabor: 100 },
-        { id: 5, name: 'Licencia', supplier: 'Otros', purchasePrice: 60, tc: DEFAULT_TC, isTangible: false, assemblyGroup: '', baseLabor: 0 }
-    ];
-    let historyQuotes = [];
-    let nextQuoteSequence = 1000;
-    let historyLoaded = false;
-
-    let editingQuoteIdInHistory = null;
-    let productEditingId = null;
-
-    // ── Carga de logo de la empresa (en memoria, sin localStorage) ──
-    function handleLogoUpload(event) {
-        const file = event.target.files && event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('logoPreview');
-            const placeholder = document.getElementById('logoPlaceholder');
-            preview.src = e.target.result;
-            preview.classList.remove('hidden');
-            placeholder.classList.add('hidden');
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // ── Persistencia entre sesiones vía window.storage, con fallback en memoria ──
-    const storageAvailable = (typeof window !== 'undefined' && window.storage
-        && typeof window.storage.get === 'function'
-        && typeof window.storage.set === 'function');
-
-    async function loadHistoryFromStorage() {
-        if (!storageAvailable) {
-            historyLoaded = true;
-            return; // se queda con lo que haya en memoria
-        }
-        try {
-            const seqResult = await window.storage.get('cotizaciones:nextSequence');
-            if (seqResult && seqResult.value) {
-                nextQuoteSequence = parseInt(seqResult.value) || nextQuoteSequence;
-            }
-        } catch (err) {
-            // clave aún no existe; se mantiene el valor actual
-        }
-
-        try {
-            const listResult = await window.storage.list('cotizaciones:item:');
-            const keys = (listResult && listResult.keys) ? listResult.keys : [];
-            const loaded = [];
-            for (const k of keys) {
-                try {
-                    const item = await window.storage.get(k);
-                    if (item && item.value) loaded.push(JSON.parse(item.value));
-                } catch (e) {
-                    console.error('Error leyendo cotización', k, e);
-                }
-            }
-            loaded.sort((a, b) => a.id - b.id);
-            historyQuotes = loaded;
-        } catch (err) {
-            console.error('No se pudo listar el historial:', err);
-        }
-        historyLoaded = true;
-    }
-
-    async function persistQuote(quote) {
-        if (!storageAvailable) return true; // modo memoria: se considera "guardado" para no bloquear el flujo
-        try {
-            await window.storage.set(`cotizaciones:item:${quote.id}`, JSON.stringify(quote));
-            await window.storage.set('cotizaciones:nextSequence', String(nextQuoteSequence));
-            return true;
-        } catch (err) {
-            console.error('Error guardando cotización en storage:', err);
-            return false;
-        }
-    }
-
-    async function removeQuoteFromStorage(id) {
-        if (!storageAvailable) return true;
-        try {
-            await window.storage.delete(`cotizaciones:item:${id}`);
-            return true;
-        } catch (err) {
-            console.error('Error eliminando cotización de storage:', err);
-            return false;
-        }
-    }
-
-    // ── Modal helpers (reemplaza alert/confirm nativos, bloqueados en iframes) ──
-    function showAlert(message) {
-        return new Promise(resolve => {
-            const overlay = document.getElementById('modalOverlay');
-            document.getElementById('modalMessage').innerText = message;
-            const btns = document.getElementById('modalButtons');
-            btns.innerHTML = '';
-            const okBtn = document.createElement('button');
-            okBtn.className = 'px-4 py-2 bg-blue-700 text-white rounded text-xs font-medium hover:bg-blue-600 cursor-pointer';
-            okBtn.innerText = 'Aceptar';
-            okBtn.onclick = () => { overlay.classList.add('hidden'); overlay.classList.remove('flex'); resolve(true); };
-            btns.appendChild(okBtn);
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-        });
-    }
-
-    function showConfirm(message) {
-        return new Promise(resolve => {
-            const overlay = document.getElementById('modalOverlay');
-            document.getElementById('modalMessage').innerText = message;
-            const btns = document.getElementById('modalButtons');
-            btns.innerHTML = '';
-
-            const cancelBtn = document.createElement('button');
-            cancelBtn.className = 'px-4 py-2 border border-blue-200 rounded text-xs text-slate-600 hover:bg-slate-50 cursor-pointer';
-            cancelBtn.innerText = 'Cancelar';
-            cancelBtn.onclick = () => { overlay.classList.add('hidden'); overlay.classList.remove('flex'); resolve(false); };
-
-            const okBtn = document.createElement('button');
-            okBtn.className = 'px-4 py-2 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700 cursor-pointer';
-            okBtn.innerText = 'Eliminar';
-            okBtn.onclick = () => { overlay.classList.add('hidden'); overlay.classList.remove('flex'); resolve(true); };
-
-            btns.appendChild(cancelBtn);
-            btns.appendChild(okBtn);
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-        });
-    }
-
-    // --- MANEJO DE PESTAÑAS ---
-    async function switchTab(tab) {
-        const btnEditor = document.getElementById('tabBtnEditor');
-        const btnHistory = document.getElementById('tabBtnHistory');
-        const viewEditor = document.getElementById('viewEditor');
-        const viewHistory = document.getElementById('viewHistory');
-
-        if (tab === 'editor') {
-            btnEditor.classList.add('tab-active');
-            btnHistory.classList.remove('tab-active');
-            viewEditor.classList.remove('hidden');
-            viewHistory.classList.add('hidden');
-        } else {
-            btnEditor.classList.remove('tab-active');
-            btnHistory.classList.add('tab-active');
-            viewEditor.classList.add('hidden');
-            viewHistory.classList.remove('hidden');
-
-            const tbody = document.getElementById('historyTableBody');
-            tbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-400 italic">Cargando historial...</td></tr>`;
-            await loadHistoryFromStorage();
-            renderHistoryTable();
-        }
-    }
-
-    // --- CRUD PRODUCTOS DE LA COTIZACIÓN ACTUAL ---
-    function handleProductSubmit(e) {
-        e.preventDefault();
-        const name = document.getElementById('pName').value.trim();
-        const supplier = document.getElementById('pSupplier').value;
-        const purchasePrice = parseFloat(document.getElementById('pPrice').value) || 0;
-        const tc = parseFloat(document.getElementById('pTC').value) || 0;
-        const assemblyGroup = document.getElementById('pAssembly').value.trim().toUpperCase();
-        const baseLabor = parseFloat(document.getElementById('pLabor').value) || 0;
-        const isTangible = document.getElementById('pIsTangible').checked;
-
-        if (productEditingId) {
-            currentQuoteProducts = currentQuoteProducts.map(p => p.id === productEditingId ? {
-                id: productEditingId, name, supplier, purchasePrice, tc, isTangible, assemblyGroup, baseLabor
-            } : p);
-            productEditingId = null;
-        } else {
-            currentQuoteProducts.push({
-                id: Date.now(), name, supplier, purchasePrice, tc, isTangible, assemblyGroup, baseLabor
-            });
-        }
-
-        clearProductForm();
-        // Init: carga la secuencia de IDs y el historial persistido antes del primer render
-    (async function init() {
-        await loadHistoryFromStorage();
-        calculateCurrentQuote();
-    })();
-    }
-
-    function editProduct(id) {
-        const p = currentQuoteProducts.find(prod => prod.id === id);
-        if (!p) return;
-        productEditingId = id;
-        document.getElementById('pName').value = p.name;
-        document.getElementById('pSupplier').value = p.supplier;
-        document.getElementById('pPrice').value = p.purchasePrice;
-        document.getElementById('pTC').value = p.tc;
-        document.getElementById('pAssembly').value = p.assemblyGroup;
-        document.getElementById('pLabor').value = p.baseLabor;
-        document.getElementById('pIsTangible').checked = p.isTangible;
-
-        document.getElementById('formTitle').innerText = "Modificando Ítem Escogido";
-        document.getElementById('btnSubmitProduct').innerText = "Guardar Cambios";
-        document.getElementById('btnCancelEdit').classList.remove('hidden');
-    }
-
-    function deleteProduct(id) {
-        currentQuoteProducts = currentQuoteProducts.filter(p => p.id !== id);
-        if (productEditingId === id) clearProductForm();
-        calculateCurrentQuote();
-    }
-
-    function clearProductForm() {
-        productEditingId = null;
-        document.getElementById('productForm').reset();
-        document.getElementById('formTitle').innerText = "Ingresar Parámetros de Producto";
-        document.getElementById('btnSubmitProduct').innerText = "Añadir Ítem";
-        document.getElementById('btnCancelEdit').classList.add('hidden');
-    }
-
-    // Permite editar el T.C. directamente en la tabla, sin restricciones
-    function updateRowTC(id, value) {
-        const p = currentQuoteProducts.find(prod => prod.id === id);
-        if (!p) return;
-        p.tc = parseFloat(value) || 0;
-        calculateCurrentQuote();
-    }
-
-    // --- CÁLCULOS MATEMÁTICOS DE COSTOS (todo en Soles, salvo P.Compra $ y P.V. Unit. $) ---
-    function calculateCurrentQuote() {
-        const marginVal = (parseFloat(document.getElementById('globalMargin').value) || 0) / 100;
-        const tbody = document.getElementById('currentQuoteTableBody');
-        tbody.innerHTML = '';
-
-        // Contadores proporcionales
-        const countSupplierTangibles = {};
-        const countAssemblyGroup = {};
-
-        currentQuoteProducts.forEach(p => {
-            if (p.isTangible) countSupplierTangibles[p.supplier] = (countSupplierTangibles[p.supplier] || 0) + 1;
-            if (p.isTangible && p.assemblyGroup) countAssemblyGroup[p.assemblyGroup] = (countAssemblyGroup[p.assemblyGroup] || 0) + 1;
-        });
-
-        let runningOperationTotal = 0;
-
-        if (currentQuoteProducts.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400 italic">Aún no hay productos en esta cotización.</td></tr>`;
-        }
-
-        currentQuoteProducts.forEach(p => {
-            const tc = p.tc || 0;
-            const purchaseSoles = p.purchasePrice * tc;
-
-            // Flete proporcional fijo por proveedor (S/.), ya en soles
-            let pFreight = (p.isTangible && countSupplierTangibles[p.supplier]) ? (FREIGHT_BASE[p.supplier] / countSupplierTangibles[p.supplier]) : 0;
-            // Mano de obra proporcional por grupo de ensamble (S/.)
-            let pLabor = (p.isTangible && p.assemblyGroup && countAssemblyGroup[p.assemblyGroup]) ? (p.baseLabor / countAssemblyGroup[p.assemblyGroup]) : 0;
-
-            let combinedCostSoles = purchaseSoles + pFreight + pLabor;
-            let vPriceSoles = marginVal < 1 ? (combinedCostSoles / (1 - marginVal)) : combinedCostSoles;
-            let vPriceUSD = tc > 0 ? (vPriceSoles / tc) : 0;
-
-            runningOperationTotal += vPriceSoles;
-
-            const tr = document.createElement('tr');
-            tr.className = p.id === productEditingId ? 'bg-blue-50/60' : '';
-            tr.innerHTML = `
-                <td class="p-4 font-medium text-slate-900">
-                    ${p.name}
-                    <div class="text-[11px] text-slate-400 font-normal mt-0.5">
-                        ${p.supplier} ${p.assemblyGroup ? '• Grupo: ' + p.assemblyGroup : ''} ${!p.isTangible ? '• Intangible' : ''}
-                    </div>
-                </td>
-                <td class="p-4 text-right text-slate-500">${p.purchasePrice.toFixed(2)}</td>
-                <td class="p-4 text-right">
-                    <input type="number" step="0.001" min="0" value="${tc}" class="tc-input border border-blue-200 rounded p-1 text-right text-xs focus:outline-none focus:border-blue-500" onchange="updateRowTC(${p.id}, this.value)">
-                </td>
-                <td class="p-4 text-right text-slate-500">S/. ${purchaseSoles.toFixed(2)}</td>
-                <td class="p-4 text-right text-slate-500">${pFreight > 0 ? 'S/. ' + pFreight.toFixed(2) : '—'}</td>
-                <td class="p-4 text-right text-slate-500">${pLabor > 0 ? 'S/. ' + pLabor.toFixed(2) : '—'}</td>
-                <td class="p-4 text-right font-medium text-slate-950">S/. ${vPriceSoles.toFixed(2)}</td>
-                <td class="p-4 text-right font-medium text-slate-950">${vPriceUSD.toFixed(2)}</td>
-                <td class="p-4 text-center">
-                    <div class="flex justify-center gap-3 text-xs">
-                        <button onclick="editProduct(${p.id})" class="text-blue-600 hover:text-blue-800 font-medium cursor-pointer">Editar</button>
-                        <button onclick="deleteProduct(${p.id})" class="text-red-400 hover:text-red-600 font-medium cursor-pointer">Borrar</button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-
-        document.getElementById('badgeCount').innerText = `${currentQuoteProducts.length} Productos`;
-        document.getElementById('lblCurrentTotal').innerText = `S/. ${runningOperationTotal.toFixed(2)}`;
-        const globalTC = parseFloat(document.getElementById('globalTC').value) || 0;
-        const totalUSD = globalTC > 0 ? (runningOperationTotal / globalTC) : 0;
-        document.getElementById('lblCurrentTotalUSD').innerText = `$ ${totalUSD.toFixed(2)}`;
-
-        if (!editingQuoteIdInHistory) {
-            document.getElementById('lblNextQuoteId').innerText = `Cotización ${nextQuoteSequence}`;
-        }
-        return runningOperationTotal;
-    }
-
-    // --- SISTEMA DE GUARDADO E HISTORIAL (persistente vía window.storage) ---
-    async function saveCurrentQuoteToArray() {
-        if (currentQuoteProducts.length === 0) {
-            await showAlert("Por favor añada al menos un producto antes de guardar.");
-            return;
-        }
-
-        const marginVal = parseFloat(document.getElementById('globalMargin').value) || 0;
-        const noteText = document.getElementById('quoteNote').value.trim();
-        const calculatedTotal = calculateCurrentQuote();
-
-        if (editingQuoteIdInHistory !== null) {
-            // Reescribir registro editado
-            const updatedQuote = historyQuotes.find(q => q.id === editingQuoteIdInHistory);
-            const newQuoteData = {
-                ...updatedQuote,
-                products: [...currentQuoteProducts],
-                margin: marginVal,
-                note: noteText,
-                total: calculatedTotal,
-                fecha: updatedQuote && updatedQuote.fecha ? updatedQuote.fecha : new Date().toISOString()
-            };
-            historyQuotes = historyQuotes.map(q => q.id === editingQuoteIdInHistory ? newQuoteData : q);
-            const ok = await persistQuote(newQuoteData);
-            if (!ok) await showAlert("Hubo un problema al guardar en el almacenamiento. Intenta de nuevo.");
-            else await showAlert(`Cotización ${editingQuoteIdInHistory} modificada exitosamente.`);
-            editingQuoteIdInHistory = null;
-        } else {
-            // Crear nueva entrada incremental
-            const newQuote = {
-                id: nextQuoteSequence,
-                note: noteText || 'Sin descripción',
-                margin: marginVal,
-                products: [...currentQuoteProducts],
-                total: calculatedTotal,
-                fecha: new Date().toISOString()
-            };
-            nextQuoteSequence++;
-            const ok = await persistQuote(newQuote);
-            if (ok) {
-                historyQuotes.push(newQuote);
-            } else {
-                nextQuoteSequence--;
-                await showAlert("Hubo un problema al guardar en el almacenamiento. Intenta de nuevo.");
-                return;
-            }
-        }
-
-        currentQuoteProducts = [];
-        document.getElementById('quoteNote').value = '';
-
-        calculateCurrentQuote();
-        switchTab('history');
-    }
-
-    function renderHistoryTable() {
-        const tbody = document.getElementById('historyTableBody');
-        tbody.innerHTML = '';
-
-        if (historyQuotes.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="8" class="p-8 text-center text-slate-400 italic">No hay cotizaciones grabadas en el historial.</td></tr>`;
-            return;
-        }
-
-        historyQuotes.forEach(q => {
-            const tr = document.createElement('tr');
-            const globalTC = parseFloat(document.getElementById('globalTC').value) || 0;
-            const totalUSD = globalTC > 0 ? (q.total / globalTC) : 0;
-            const fechaStr = q.fecha ? new Date(q.fecha).toLocaleString('es-PE', { dateStyle: 'short', timeStyle: 'short' }) : '—';
-            tr.innerHTML = `
-                <td class="p-4 font-semibold text-slate-900">Cotización ${q.id}</td>
-                <td class="p-4 text-slate-500 text-xs whitespace-nowrap">${fechaStr}</td>
-                <td class="p-4 text-slate-600 max-w-xs truncate">${q.note}</td>
-                <td class="p-4 text-center text-slate-500 font-medium">${q.products.length}</td>
-                <td class="p-4 text-right text-slate-500">${q.margin}%</td>
-                <td class="p-4 text-right font-semibold text-slate-900">S/. ${q.total.toFixed(2)}</td>
-                <td class="p-4 text-right font-semibold text-slate-900">$ ${totalUSD.toFixed(2)}</td>
-                <td class="p-4 text-center">
-                    <div class="flex justify-center gap-3 text-xs">
-                        <button onclick="loadQuoteForEdit(${q.id})" class="text-blue-600 hover:text-blue-800 font-medium cursor-pointer">Editar</button>
-                        <button onclick="exportToHTMLFile(${q.id})" class="text-blue-500 hover:text-blue-700 font-medium cursor-pointer">Exportar HTML</button>
-                        <button onclick="deleteQuoteFromHistory(${q.id})" class="text-red-400 hover:text-red-600 font-medium cursor-pointer">Borrar</button>
-                    </div>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    function loadQuoteForEdit(id) {
-        const q = historyQuotes.find(item => item.id === id);
-        if (!q) return;
-
-        editingQuoteIdInHistory = id;
-        currentQuoteProducts = [...q.products];
-        document.getElementById('globalMargin').value = q.margin;
-        document.getElementById('quoteNote').value = q.note;
-        document.getElementById('lblNextQuoteId').innerText = `Editando Cot. ${id}`;
-
-        switchTab('editor');
-        calculateCurrentQuote();
-    }
-
-    async function deleteQuoteFromHistory(id) {
-        const confirmed = await showConfirm(`¿Seguro que desea eliminar permanentemente la Cotización ${id}?`);
-        if (!confirmed) return;
-        const ok = await removeQuoteFromStorage(id);
-        if (!ok) {
-            await showAlert("No se pudo eliminar la cotización del almacenamiento. Intenta de nuevo.");
-            return;
-        }
-        historyQuotes = historyQuotes.filter(q => q.id !== id);
-        renderHistoryTable();
-    }
-
-    // --- MÓDULO DE EXPORTACIÓN HTML INDEPENDIENTE ---
-    function exportToHTMLFile(id) {
-        const q = historyQuotes.find(item => item.id === id);
-        if (!q) return;
-
-        const globalTC = parseFloat(document.getElementById('globalTC').value) || 0;
-        const totalUSD = globalTC > 0 ? (q.total / globalTC) : 0;
-
-        // Recalcular proporciones locales para el reporte estático
-        const countSup = {};
-        const countAsm = {};
-        q.products.forEach(p => {
-            if (p.isTangible) countSup[p.supplier] = (countSup[p.supplier] || 0) + 1;
-            if (p.isTangible && p.assemblyGroup) countAsm[p.assemblyGroup] = (countAsm[p.assemblyGroup] || 0) + 1;
-        });
-
-        let tableRowsHTML = '';
-        q.products.forEach(p => {
-            const tc = p.tc || 0;
-            const purchaseSoles = p.purchasePrice * tc;
-            let f = (p.isTangible && countSup[p.supplier]) ? (FREIGHT_BASE[p.supplier] / countSup[p.supplier]) : 0;
-            let l = (p.isTangible && p.assemblyGroup && countAsm[p.assemblyGroup]) ? (p.baseLabor / countAsm[p.assemblyGroup]) : 0;
-            let c = purchaseSoles + f + l;
-            let v = (q.margin / 100) < 1 ? (c / (1 - (q.margin / 100))) : c;
-            let vUSD = tc > 0 ? (v / tc) : 0;
-
-            tableRowsHTML += `
-                <tr style="border-bottom: 1px solid #dbeafe;">
-                    <td style="padding: 12px; font-weight: 500; color: #1c2d42;">
-                        ${p.name}<br>
-                        <span style="font-size: 11px; color: #94a3b8; font-weight: normal;">
-                            ${p.supplier} ${p.assemblyGroup ? '• Grupo: ' + p.assemblyGroup : ''}
-                        </span>
-                    </td>
-                    <td style="padding: 12px; text-align: right; color: #475569;">${p.purchasePrice.toFixed(2)}</td>
-                    <td style="padding: 12px; text-align: right; color: #475569;">${tc.toFixed(3)}</td>
-                    <td style="padding: 12px; text-align: right; color: #475569;">S/. ${purchaseSoles.toFixed(2)}</td>
-                    <td style="padding: 12px; text-align: right; color: #475569;">${f > 0 ? 'S/. ' + f.toFixed(2) : '—'}</td>
-                    <td style="padding: 12px; text-align: right; color: #475569;">${l > 0 ? 'S/. ' + l.toFixed(2) : '—'}</td>
-                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #1c2d42;">S/. ${v.toFixed(2)}</td>
-                    <td style="padding: 12px; text-align: right; font-weight: 600; color: #1c2d42;">${vUSD.toFixed(2)}</td>
-                </tr>
-            `;
-        });
-
-        // Generación de string plano HTML con estilos inline embebidos para portabilidad absoluta
-        const rawHTML = `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Cotización ${q.id} - Exportado</title>
-</head>
-<body style="background-color: #eff6ff; color: #334155; font-family: system-ui, -apple-system, sans-serif; padding: 40px 20px;">
-<div style="max-width: 850px; margin: 0 auto; background: #ffffff; border: 1px solid #dbeafe; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);">
-    <div style="background-color: #f8fafc; padding: 24px; border-bottom: 1px solid #dbeafe; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <h1 style="margin: 0; font-size: 20px; font-weight: 300; color: #1c2d42;">Cotización ${q.id}</h1>
-            <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b;">Nota / Desc: ${q.note}</p>
-        </div>
-        <div style="text-align: right;">
-            <span style="font-size: 12px; color: #64748b; text-transform: uppercase;">Margen Aplicado</span>
-            <div style="font-size: 16px; font-weight: 600; color: #1c2d42;">${q.margin}%</div>
-        </div>
+  <div class="card">
+    <h2>Parametros Globales</h2>
+    <div class="grid grid-6">
+      <div class="field"><label>Tipo de Cambio</label><input type="number" id="tc" class="lockable" value="3.75" step="0.01" oninput="recalcularTodo()"></div>
+      <div class="field"><label>Margen Comercial %</label><input type="number" id="margen" class="lockable" value="20" step="1" oninput="recalcularTodo()">
+        <div class="hint">PV = Costo / (1 - Margen%)</div>
+      </div>
+      <div class="field"><label>Mano de Obra Total (S/.)</label><input type="number" id="manoObraTotal" class="lockable" value="0" step="1" oninput="recalcularTodo()">
+        <div class="hint">Se reparte solo entre items con Ensamble activo</div>
+      </div>
+      <div class="field"><label>Visita Presencial (S/.)</label><input type="number" id="visita" class="lockable" value="0" step="1" oninput="recalcularTodo()"></div>
+      <div class="field"><label>Flete Ingram (S/.)</label><input type="number" id="fleteIngram" class="lockable" value="80" step="1" oninput="recalcularTodo()"></div>
+      <div class="field"><label>Flete Intcomex (S/.)</label><input type="number" id="fleteIntcomex" class="lockable" value="50" step="1" oninput="recalcularTodo()"></div>
+      <div class="field"><label>Flete Deltron (S/.)</label><input type="number" id="fleteDeltron" class="lockable" value="30" step="1" oninput="recalcularTodo()"></div>
+      <div class="field"><label>Flete Otros (S/.)</label><input type="number" id="fleteOtros" class="lockable" value="40" step="1" oninput="recalcularTodo()"></div>
     </div>
-    <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
-        <thead>
-            <tr style="background-color: #f8fafc; border-bottom: 1px solid #dbeafe; font-size: 11px; text-transform: uppercase; color: #64748b;">
-                <th style="padding: 12px;">Producto</th>
-                <th style="padding: 12px; text-align: right;">P. Compra ($)</th>
-                <th style="padding: 12px; text-align: right;">T.C.</th>
-                <th style="padding: 12px; text-align: right;">P. Compra (S/.)</th>
-                <th style="padding: 12px; text-align: right;">Flete Prop. (S/.)</th>
-                <th style="padding: 12px; text-align: right;">M.O. Prop. (S/.)</th>
-                <th style="padding: 12px; text-align: right; color: #1c2d42;">P. Venta (S/.)</th>
-                <th style="padding: 12px; text-align: right; color: #1c2d42;">P. V. Unit. ($)</th>
+  </div>
+
+  <div class="card">
+    <h2>Agregar Producto</h2>
+    <div class="grid grid-4">
+      <div class="field"><label>Categoria</label>
+        <select id="fCat" class="lockable" onchange="onCatChange()">
+          <option value="T">Hardware (Tangible)</option>
+          <option value="L">Licencia</option>
+          <option value="S">Servicio</option>
+          <option value="V">Visita Presencial</option>
+        </select>
+      </div>
+      <div class="field"><label>Nombre del producto</label><input type="text" id="fNombre" class="lockable" placeholder="Ej: Laptop HP 250"></div>
+      <div class="field"><label>Cantidad</label><input type="number" id="fQty" class="lockable" value="1" min="1" step="1"></div>
+      <div class="chk-row"><input type="checkbox" id="fTangible" class="lockable" checked><label for="fTangible">Producto Tangible</label></div>
+      <div class="chk-row"><input type="checkbox" id="fEnsamble" class="lockable"><label for="fEnsamble">Incluir en Ensamble (M.O.)</label></div>
+    </div>
+    <div id="rowPreciosProv" class="grid grid-4" style="margin-top:12px">
+      <div class="field"><label>Ingram (USD)</label><input type="number" id="fIngram" class="lockable" value="0" step="0.01"></div>
+      <div class="field"><label>Intcomex (USD)</label><input type="number" id="fIntcomex" class="lockable" value="0" step="0.01"></div>
+      <div class="field"><label>Deltron (USD)</label><input type="number" id="fDeltron" class="lockable" value="0" step="0.01"></div>
+      <div class="field"><label>Otros (USD)</label><input type="number" id="fOtros" class="lockable" value="0" step="0.01"></div>
+    </div>
+    <div id="rowPrecioDirecto" class="grid grid-4" style="margin-top:12px;display:none">
+      <div class="field"><label>Precio Directo (S/.)</label><input type="number" id="fPrecioDirecto" class="lockable" value="0" step="0.01"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-blue lockable" id="btnAgregarItem" onclick="agregarProducto()">Agregar Item</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Estructura de Costos e Items</h2>
+    <div class="tbl-outer">
+      <div class="tbl-inner">
+        <table>
+          <thead>
+            <tr>
+              <th>Cat.</th><th>Producto</th><th>Cant.</th><th>Tang.</th><th>Ens.</th>
+              <th>Ingram $</th><th>Intcomex $</th><th>Deltron $</th><th>Otros $</th>
+              <th>Mejor Prov.</th><th>Compra USD</th><th>Compra S/.</th>
+              <th>Flete S/.</th><th>M.O. S/.</th><th>Costo Total</th>
+              <th>PV Unit.</th><th>PV Total</th><th>Ganancia</th><th></th>
             </tr>
-        </thead>
-        <tbody>
-            ${tableRowsHTML}
-        </tbody>
-    </table>
-    <div style="background-color: #1c2d42; color: #ffffff; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #93c5fd;">Monto de Cierre Comercial (S/.)</span>
-            <span style="font-size: 22px; font-weight: 300;">S/. ${q.total.toFixed(2)}</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
-            <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #93c5fd;">Monto de Cierre Comercial ($)</span>
-            <span style="font-size: 16px; font-weight: 300; color: #dbeafe;">$ ${totalUSD.toFixed(2)}</span>
-        </div>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
     </div>
+    <div class="summary-grid" id="summaryGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2>Modulo de Escenarios</h2>
+    <div class="grid grid-4" style="margin-bottom:16px">
+      <div class="field"><label>Descuento % simulado</label><input type="number" id="escDescuento" value="5" step="1" oninput="recalcularTodo()"></div>
+      <div class="field"><label>T.C. Alternativo</label><input type="number" id="escTC" value="3.85" step="0.01" oninput="recalcularTodo()"></div>
+      <div class="field"><label>Margen Alternativo %</label><input type="number" id="escMargen" value="28" step="1" oninput="recalcularTodo()"></div>
+    </div>
+    <div class="esc-grid" id="escGrid"></div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <button class="btn btn-green" onclick="exportarHTML()">Exportar como HTML</button>
+    <button class="btn btn-ghost" style="margin-left:10px" onclick="agregarDemo()">Cargar datos de ejemplo</button>
+  </div>
+
+  <div class="card">
+    <h2>Historial de Cotizaciones Guardadas</h2>
+    <div id="historialWrap"></div>
+  </div>
+
+  <footer>COSEINCO Soluciones Tecnologicas - Calculadora interna de cotizaciones</footer>
 </div>
-</body>
-</html>`;
 
-        // Proceso nativo de descarga mediante Blob
-        const blob = new Blob([rawHTML], { type: 'text/html;charset=utf-8;' });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", `cotizacion${q.id}.html`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal-box">
+    <p id="confirmMsg">Confirmar accion</p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="hideConfirm()">Cancelar</button>
+      <button class="btn btn-danger btn-sm" id="confirmOkBtn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+var productos = [];
+var nextId = 1;
+var isLocked = false;
+var historial = [];
+var lastCtx = null;
+var lastTotals = { costo: 0, pv: 0, gan: 0 };
+var PROVEEDORES = ['Ingram', 'Intcomex', 'Deltron', 'Otros'];
+var PROV_KEYS = ['i', 'x', 'd', 'o'];
+var FLETE_IDS = ['fleteIngram', 'fleteIntcomex', 'fleteDeltron', 'fleteOtros'];
+
+function byId(id){
+  return document.getElementById(id);
+}
+function gv(id){
+  var el = byId(id);
+  if(!el) return 0;
+  var n = parseFloat(el.value);
+  return isNaN(n) ? 0 : n;
+}
+function fmt(n, d){
+  if(d === undefined){ d = 2; }
+  if(!n){ n = 0; }
+  return n.toLocaleString('es-PE', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function getTC(){ return gv('tc'); }
+function getMargen(){ return gv('margen') / 100; }
+function getFletesGlobal(){
+  var out = [];
+  for(var i=0; i<FLETE_IDS.length; i++){ out.push(gv(FLETE_IDS[i])); }
+  return out;
+}
+function fechaCorta(d){
+  if(!(d instanceof Date)) d = new Date(d);
+  var dd = String(d.getDate()).padStart ? String(d.getDate()).padStart(2,'0') : ('0'+d.getDate()).slice(-2);
+  var mm = String(d.getMonth()+1).padStart ? String(d.getMonth()+1).padStart(2,'0') : ('0'+(d.getMonth()+1)).slice(-2);
+  var hh = d.getHours(); var mi = d.getMinutes();
+  var hh2 = (hh<10?'0':'')+hh; var mi2 = (mi<10?'0':'')+mi;
+  return dd + '/' + mm + '/' + d.getFullYear() + ' ' + hh2 + ':' + mi2;
+}
+
+function onCatChange(){
+  var cat = byId('fCat').value;
+  var esTangible = (cat === 'T');
+  byId('rowPreciosProv').style.display = esTangible ? 'grid' : 'none';
+  byId('rowPrecioDirecto').style.display = esTangible ? 'none' : 'grid';
+  byId('fTangible').checked = esTangible;
+}
+
+function setLocked(locked){
+  isLocked = locked;
+  var els = document.querySelectorAll('.lockable');
+  for(var i=0; i<els.length; i++){ els[i].disabled = locked; }
+  byId('btnGuardar').disabled = locked;
+  byId('btnEditar').disabled = !locked;
+  var badge = byId('statusBadge');
+  if(locked){
+    badge.className = 'status-badge saved';
+    badge.textContent = 'Cotizacion Guardada';
+  } else {
+    badge.className = 'status-badge editing';
+    badge.textContent = 'Editando';
+  }
+  recalcularTodo();
+}
+
+function showConfirm(mensaje, onOk){
+  var overlay = byId('confirmOverlay');
+  var msgEl = byId('confirmMsg');
+  var okBtn = byId('confirmOkBtn');
+  msgEl.textContent = mensaje;
+  overlay.className = 'modal-overlay show';
+  okBtn.onclick = function(){
+    overlay.className = 'modal-overlay';
+    onOk();
+  };
+}
+function hideConfirm(){
+  byId('confirmOverlay').className = 'modal-overlay';
+}
+
+function guardarCotizacion(){
+  if(productos.length === 0){
+    alert('Agrega al menos un producto antes de guardar la cotizacion.');
+    return;
+  }
+  var snap = {
+    id: 'q_' + Date.now(),
+    fecha: new Date(),
+    nota: byId('notaRapida').value || 'Sin nota',
+    productos: JSON.parse(JSON.stringify(productos)),
+    params: {
+      tc: gv('tc'), margen: gv('margen'), manoObraTotal: gv('manoObraTotal'), visita: gv('visita'),
+      fleteIngram: gv('fleteIngram'), fleteIntcomex: gv('fleteIntcomex'), fleteDeltron: gv('fleteDeltron'), fleteOtros: gv('fleteOtros')
+    },
+    totales: { costo: lastTotals.costo, pv: lastTotals.pv, gan: lastTotals.gan }
+  };
+  historial.unshift(snap);
+  setLocked(true);
+  renderHistorial();
+}
+
+function editarCotizacion(){
+  setLocked(false);
+}
+
+function nuevaCotizacion(){
+  function reiniciar(){
+    productos = [];
+    nextId = 1;
+    byId('notaRapida').value = '';
+    byId('tc').value = 3.75;
+    byId('margen').value = 20;
+    byId('manoObraTotal').value = 0;
+    byId('visita').value = 0;
+    byId('fleteIngram').value = 80;
+    byId('fleteIntcomex').value = 50;
+    byId('fleteDeltron').value = 30;
+    byId('fleteOtros').value = 40;
+    setLocked(false);
+  }
+  if(productos.length > 0){
+    showConfirm('Se limpiara la cotizacion actual (productos y nota). Los parametros globales volveran a sus valores por defecto. Continuar?', reiniciar);
+  } else {
+    reiniciar();
+  }
+}
+
+function mejorProveedor(p, fletesGlobal){
+  var precios = [];
+  for(var i=0; i<PROV_KEYS.length; i++){
+    var key = PROV_KEYS[i];
+    var precio = parseFloat(p[key]);
+    if(isNaN(precio)) precio = 0;
+    if(precio > 0){
+      precios.push({ prov: PROVEEDORES[i], idx: i, precio: precio, flete: fletesGlobal[i] });
     }
+  }
+  if(precios.length === 0) return null;
 
-    calculateCurrentQuote();
+  var minPrecio = precios[0].precio;
+  for(i=1; i<precios.length; i++){
+    if(precios[i].precio < minPrecio) minPrecio = precios[i].precio;
+  }
+
+  var empatados = [];
+  for(i=0; i<precios.length; i++){
+    if(Math.abs(precios[i].precio - minPrecio) < 0.0001) empatados.push(precios[i]);
+  }
+  empatados.sort(function(a,b){ return a.flete - b.flete; });
+  var elegido = empatados[0];
+
+  var worst = precios[0];
+  for(i=0; i<precios.length; i++){
+    if(precios[i].precio > worst.precio) worst = precios[i];
+  }
+
+  return { prov: elegido.prov, idx: elegido.idx, precio: elegido.precio, flete: elegido.flete, ahorroUSD: worst.precio - elegido.precio };
+}
+
+function calcularFletesPorProveedor(rows, fletesGlobal){
+  var grupos = {};
+  for(var r=0; r<rows.length; r++){
+    var p = rows[r];
+    if(p.cat !== 'T' || !p.tangible) continue;
+    var mp = mejorProveedor(p, fletesGlobal);
+    if(!mp) continue;
+    var pesoUSD = mp.precio * p.qty;
+    if(!grupos[mp.idx]) grupos[mp.idx] = { items: [], sumaUSD: 0 };
+    grupos[mp.idx].items.push({ id: p.id, pesoUSD: pesoUSD });
+    grupos[mp.idx].sumaUSD += pesoUSD;
+  }
+
+  var fleteMap = {};
+  var keys = Object.keys(grupos);
+  for(var k=0; k<keys.length; k++){
+    var idx = keys[k];
+    var g = grupos[idx];
+    var fleteProveedorSoles = fletesGlobal[idx];
+    for(var it=0; it<g.items.length; it++){
+      var item = g.items[it];
+      var factor = g.sumaUSD > 0 ? item.pesoUSD / g.sumaUSD : 0;
+      fleteMap[item.id] = fleteProveedorSoles * factor;
+    }
+  }
+  return fleteMap;
+}
+
+function calcularManoObraPorProducto(rows, tc, manoObraTotal, fletesGlobal){
+  var ensamblados = [];
+  for(var r=0; r<rows.length; r++){
+    if(rows[r].ensamble && rows[r].cat === 'T') ensamblados.push(rows[r]);
+  }
+  if(ensamblados.length === 0 || manoObraTotal <= 0) return {};
+
+  var pesos = [];
+  for(r=0; r<ensamblados.length; r++){
+    var p = ensamblados[r];
+    var mp = mejorProveedor(p, fletesGlobal);
+    var compraUSD = mp ? mp.precio : 0;
+    var compraSoles = compraUSD * tc * p.qty;
+    pesos.push({ id: p.id, peso: compraSoles });
+  }
+  var sumaPeso = 0;
+  for(r=0; r<pesos.length; r++){ sumaPeso += pesos[r].peso; }
+
+  var moMap = {};
+  for(r=0; r<pesos.length; r++){
+    var factor = sumaPeso > 0 ? pesos[r].peso / sumaPeso : (1/pesos.length);
+    moMap[pesos[r].id] = manoObraTotal * factor;
+  }
+  return moMap;
+}
+
+function calcularFila(p, ctx){
+  var tc = ctx.tc, margen = ctx.margen, fletesGlobal = ctx.fletesGlobal,
+      fleteMap = ctx.fleteMap, moMap = ctx.moMap, visita = ctx.visita;
+
+  if(p.cat === 'V'){
+    return { mejorProv:null, compraUSD:0, compraSoles:0, fleteSoles:0, moSoles:0,
+      costoTotal: visita, pvUnit: visita, pvTotal: visita, ganancia: 0, ganTotal: 0 };
+  }
+
+  if(p.cat === 'L' || p.cat === 'S'){
+    var costo = p.precioDirecto || 0;
+    var pvUnitLS = margen < 1 ? costo / (1 - margen) : costo;
+    var ganLS = pvUnitLS - costo;
+    return { mejorProv:null, compraUSD:0, compraSoles:costo, fleteSoles:0, moSoles:0,
+      costoTotal: costo, pvUnit: pvUnitLS, pvTotal: pvUnitLS * p.qty, ganancia: ganLS, ganTotal: ganLS * p.qty };
+  }
+
+  var mp = mejorProveedor(p, fletesGlobal);
+  var compraUSD = mp ? mp.precio : 0;
+  var compraSoles = compraUSD * tc;
+  var fleteSoles = fleteMap[p.id] || 0;
+  var moSoles = moMap[p.id] || 0;
+  var costoTotal = compraSoles + (fleteSoles / p.qty) + (moSoles / p.qty);
+  var pvUnit = margen < 1 ? costoTotal / (1 - margen) : costoTotal;
+  var ganancia = pvUnit - costoTotal;
+
+  return { mejorProv: mp, compraUSD: compraUSD, compraSoles: compraSoles, fleteSoles: fleteSoles, moSoles: moSoles,
+    costoTotal: costoTotal, pvUnit: pvUnit, pvTotal: pvUnit * p.qty, ganancia: ganancia, ganTotal: ganancia * p.qty };
+}
+
+function buildRowHtml(p, idx, r, dis){
+  var html = '';
+  html += '<td><span class="tag tag-' + p.cat + '">' + p.cat + '</span></td>';
+  html += '<td><input class="cell-input" style="width:130px;text-align:left" value="' + p.nombre + '" ' + dis +
+    ' onchange="productos[' + idx + '].nombre=this.value;recalcularTodo()"></td>';
+  html += '<td class="num"><input class="cell-input" style="width:40px" type="number" min="1" value="' + p.qty + '" ' + dis +
+    ' onchange="productos[' + idx + '].qty=Math.max(1,parseInt(this.value)||1);recalcularTodo()"></td>';
+  html += '<td style="text-align:center"><input type="checkbox" class="row-chk" ' + (p.tangible ? 'checked' : '') + ' ' + dis +
+    ' onchange="productos[' + idx + '].tangible=this.checked;recalcularTodo()"></td>';
+  if(p.cat === 'T'){
+    html += '<td style="text-align:center"><input type="checkbox" class="row-chk" ' + (p.ensamble ? 'checked' : '') + ' ' + dis +
+      ' onchange="productos[' + idx + '].ensamble=this.checked;recalcularTodo()"></td>';
+  } else {
+    html += '<td></td>';
+  }
+
+  if(p.cat === 'T'){
+    for(var i=0; i<PROV_KEYS.length; i++){
+      var k = PROV_KEYS[i];
+      var isBest = r.mejorProv && r.mejorProv.idx === i;
+      var styleBest = isBest ? 'color:#16a34a;font-weight:800' : '';
+      html += '<td class="num"><input class="cell-input" type="number" step="0.01" value="' + (p[k] || 0) + '" ' + dis +
+        ' style="' + styleBest + '"' +
+        ' onchange="productos[' + idx + '].' + k + '=parseFloat(this.value)||0;recalcularTodo()"></td>';
+    }
+  } else {
+    html += '<td class="num">-</td><td class="num">-</td><td class="num">-</td><td class="num">-</td>';
+  }
+
+  html += '<td>' + (r.mejorProv ? '<span class="prov-best">' + r.mejorProv.prov + '</span>' : '-') + '</td>';
+  html += '<td class="num">' + (p.cat === 'T' ? '$' + fmt(r.compraUSD) : '-') + '</td>';
+  html += '<td class="num">' + fmt(r.compraSoles) + '</td>';
+  html += '<td class="num">' + (r.fleteSoles > 0 ? fmt(r.fleteSoles) : '-') + '</td>';
+  html += '<td class="num">' + (r.moSoles > 0 ? fmt(r.moSoles) : '-') + '</td>';
+  html += '<td class="num" style="color:var(--blue-dark)">' + fmt(r.costoTotal) + '</td>';
+  html += '<td class="num" style="font-weight:700">' + fmt(r.pvUnit) + '</td>';
+  html += '<td class="num" style="font-weight:800;color:var(--blue-dark)">' + fmt(r.pvTotal) + '</td>';
+  html += '<td class="num ' + (r.ganTotal >= 0 ? 'g-pos' : 'g-neg') + '">' + fmt(r.ganTotal) + '</td>';
+  html += '<td><button class="btn btn-danger btn-sm" ' + dis + ' onclick="eliminarProducto(' + p.id + ')">X</button></td>';
+  return html;
+}
+
+function recalcularTodo(){
+  var tc = getTC();
+  var margen = getMargen();
+  var fletesGlobal = getFletesGlobal();
+  var manoObraTotal = gv('manoObraTotal');
+  var visita = gv('visita');
+
+  var fleteMap = calcularFletesPorProveedor(productos, fletesGlobal);
+  var moMap = calcularManoObraPorProducto(productos, tc, manoObraTotal, fletesGlobal);
+  var ctx = { tc: tc, margen: margen, fletesGlobal: fletesGlobal, fleteMap: fleteMap, moMap: moMap, visita: visita };
+
+  var tbody = byId('tbody');
+  tbody.innerHTML = '';
+
+  var totCosto = 0, totPVTotal = 0, totGanancia = 0, sumaComprasUSD = 0;
+
+  for(var idx=0; idx<productos.length; idx++){
+    var p = productos[idx];
+    var r = calcularFila(p, ctx);
+    totCosto += r.costoTotal * p.qty;
+    totPVTotal += r.pvTotal;
+    totGanancia += r.ganTotal;
+    if(p.cat === 'T' && r.mejorProv) sumaComprasUSD += r.compraUSD * p.qty;
+
+    var dis = isLocked ? 'disabled' : '';
+    var tr = document.createElement('tr');
+    tr.innerHTML = buildRowHtml(p, idx, r, dis);
+    tbody.appendChild(tr);
+  }
+
+  if(productos.length === 0){
+    tbody.innerHTML = '<tr><td colspan="18" style="text-align:center;padding:30px;color:var(--txt-muted)">No hay productos agregados. Usa el formulario de arriba o carga datos de ejemplo.</td></tr>';
+  }
+
+  var sumHtml = '';
+  sumHtml += '<div class="sum-card accent"><div class="lbl">Suma Compras USD (Tangibles)</div><div class="val">$' + fmt(sumaComprasUSD) + '</div></div>';
+  sumHtml += '<div class="sum-card"><div class="lbl">Costo Total S/.</div><div class="val">S/. ' + fmt(totCosto) + '</div></div>';
+  sumHtml += '<div class="sum-card accent"><div class="lbl">P.V. Total S/.</div><div class="val">S/. ' + fmt(totPVTotal) + '</div></div>';
+  sumHtml += '<div class="sum-card gain"><div class="lbl">Ganancia Total S/.</div><div class="val">S/. ' + fmt(totGanancia) + '</div></div>';
+  byId('summaryGrid').innerHTML = sumHtml;
+
+  lastCtx = ctx;
+  lastTotals = { costo: totCosto, pv: totPVTotal, gan: totGanancia };
+
+  renderEscenarios(ctx, totPVTotal, totGanancia);
+}
+
+function sumScenario(ctx){
+  var pv = 0, gan = 0;
+  for(var i=0; i<productos.length; i++){
+    var r = calcularFila(productos[i], ctx);
+    pv += r.pvTotal;
+    gan += r.ganTotal;
+  }
+  return { pv: pv, gan: gan };
+}
+
+function renderEscenarios(ctxBase, pvBase, ganBase){
+  var descPct = gv('escDescuento') / 100;
+  var tcAlt = gv('escTC');
+  var margenAlt = gv('escMargen') / 100;
+
+  var pvDesc = 0, ganDesc = 0;
+  for(var i=0; i<productos.length; i++){
+    var p = productos[i];
+    var r = calcularFila(p, ctxBase);
+    var pvUnitDesc = r.pvUnit * (1 - descPct);
+    pvDesc += pvUnitDesc * p.qty;
+    ganDesc += (pvUnitDesc - r.costoTotal) * p.qty;
+  }
+
+  var moMapAlt = calcularManoObraPorProducto(productos, tcAlt, gv('manoObraTotal'), ctxBase.fletesGlobal);
+  var ctxTC = { tc: tcAlt, margen: ctxBase.margen, fletesGlobal: ctxBase.fletesGlobal, fleteMap: ctxBase.fleteMap, moMap: moMapAlt, visita: ctxBase.visita };
+  var resTC = sumScenario(ctxTC);
+
+  var ctxMargen = { tc: ctxBase.tc, margen: margenAlt, fletesGlobal: ctxBase.fletesGlobal, fleteMap: ctxBase.fleteMap, moMap: ctxBase.moMap, visita: ctxBase.visita };
+  var resMargen = sumScenario(ctxMargen);
+
+  var html = '';
+  html += '<div class="esc-card"><h4>Base (T.C. ' + fmt(getTC(),2) + ' / Margen ' + Math.round(getMargen()*100) + '%)</h4>';
+  html += '<div class="pv">S/. ' + fmt(pvBase) + '</div>';
+  html += '<div class="row"><span>Ganancia Total (S/.)</span><b class="gan">S/. ' + fmt(ganBase) + '</b></div></div>';
+
+  html += '<div class="esc-card"><h4>Con Descuento -' + gv('escDescuento') + '%</h4>';
+  html += '<div class="pv">S/. ' + fmt(pvDesc) + '</div>';
+  html += '<div class="row"><span>Ganancia Total (S/.)</span><b class="gan">S/. ' + fmt(ganDesc) + '</b></div></div>';
+
+  html += '<div class="esc-card"><h4>T.C. Alternativo ' + fmt(tcAlt,2) + '</h4>';
+  html += '<div class="pv">S/. ' + fmt(resTC.pv) + '</div>';
+  html += '<div class="row"><span>Ganancia Total (S/.)</span><b class="gan">S/. ' + fmt(resTC.gan) + '</b></div></div>';
+
+  html += '<div class="esc-card"><h4>Margen Alternativo ' + gv('escMargen') + '%</h4>';
+  html += '<div class="pv">S/. ' + fmt(resMargen.pv) + '</div>';
+  html += '<div class="row"><span>Ganancia Total (S/.)</span><b class="gan">S/. ' + fmt(resMargen.gan) + '</b></div></div>';
+
+  byId('escGrid').innerHTML = html;
+}
+
+function agregarProducto(){
+  if(isLocked){
+    alert('La cotizacion esta guardada. Presiona Editar para modificarla.');
+    return;
+  }
+  var cat = byId('fCat').value;
+  var nombre = byId('fNombre').value.replace(/^\s+|\s+$/g,'') || 'Producto sin nombre';
+  var qty = parseInt(byId('fQty').value) || 1;
+  if(qty < 1) qty = 1;
+  var tangible = byId('fTangible').checked;
+  var ensamble = byId('fEnsamble').checked;
+
+  var p = { id: nextId, cat: cat, nombre: nombre, qty: qty, tangible: tangible, ensamble: ensamble,
+    i:0, x:0, d:0, o:0, precioDirecto:0 };
+  nextId = nextId + 1;
+
+  if(cat === 'T'){
+    p.i = gv('fIngram'); p.x = gv('fIntcomex'); p.d = gv('fDeltron'); p.o = gv('fOtros');
+  } else if(cat !== 'V'){
+    p.precioDirecto = gv('fPrecioDirecto');
+  }
+
+  productos.push(p);
+  byId('fNombre').value = '';
+  byId('fQty').value = 1;
+  byId('fIngram').value = 0;
+  byId('fIntcomex').value = 0;
+  byId('fDeltron').value = 0;
+  byId('fOtros').value = 0;
+  byId('fPrecioDirecto').value = 0;
+  recalcularTodo();
+}
+
+function eliminarProducto(id){
+  if(isLocked) return;
+  var nuevos = [];
+  for(var i=0; i<productos.length; i++){
+    if(productos[i].id !== id) nuevos.push(productos[i]);
+  }
+  productos = nuevos;
+  recalcularTodo();
+}
+
+function agregarDemo(){
+  productos = [
+    { id: 1, cat:'T', nombre:'Laptop HP 250 G9', qty:2, tangible:true, ensamble:false, i:620, x:615, d:610, o:630, precioDirecto:0 },
+    { id: 2, cat:'T', nombre:'Monitor 24 pulg FHD', qty:3, tangible:true, ensamble:false, i:180, x:175, d:182, o:190, precioDirecto:0 },
+    { id: 3, cat:'T', nombre:'CPU Placa Madre', qty:1, tangible:true, ensamble:true, i:250, x:250, d:250, o:250, precioDirecto:0 },
+    { id: 4, cat:'T', nombre:'CPU Procesador', qty:1, tangible:true, ensamble:true, i:180, x:175, d:178, o:182, precioDirecto:0 },
+    { id: 5, cat:'L', nombre:'Windows 11 Pro OEM', qty:2, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:320 },
+    { id: 6, cat:'S', nombre:'Soporte Tecnico 1h', qty:1, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:80 },
+    { id: 7, cat:'V', nombre:'Visita Presencial', qty:1, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:0 }
+  ];
+  nextId = 8;
+  byId('manoObraTotal').value = 150;
+  byId('visita').value = 60;
+  recalcularTodo();
+}
+
+// ============================================================
+// GENERADOR DE DOCUMENTO HTML DE COTIZACION (reutilizable)
+// ============================================================
+function buildQuoteHtmlDocument(nota, tc, margen, productosArr, ctx, totPV, totGan){
+  var filas = '';
+  for(var i=0; i<productosArr.length; i++){
+    var p = productosArr[i];
+    var r = calcularFila(p, ctx);
+    filas += '<tr>';
+    filas += '<td style="padding:9px;border-bottom:1px solid #e2e8f0">' + p.nombre + '<div style="font-size:10px;color:#64748b">' + p.cat + ' - Cant: ' + p.qty + '</div></td>';
+    filas += '<td style="padding:9px;border-bottom:1px solid #e2e8f0;text-align:right">S/. ' + fmt(r.costoTotal) + '</td>';
+    filas += '<td style="padding:9px;border-bottom:1px solid #e2e8f0;text-align:right;font-weight:700">S/. ' + fmt(r.pvUnit) + '</td>';
+    filas += '<td style="padding:9px;border-bottom:1px solid #e2e8f0;text-align:right;font-weight:800;color:#106FCC">S/. ' + fmt(r.pvTotal) + '</td>';
+    var ganColor = r.ganTotal >= 0 ? '#16a34a' : '#dc2626';
+    filas += '<td style="padding:9px;border-bottom:1px solid #e2e8f0;text-align:right;color:' + ganColor + '">S/. ' + fmt(r.ganTotal) + '</td>';
+    filas += '</tr>';
+  }
+
+  var htmlParts = [];
+  htmlParts.push('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Cotizacion - ' + nota + '</title></head>');
+  htmlParts.push('<body style="background:#f4f6f9;color:#1e293b;font-family:Segoe UI,sans-serif;padding:30px">');
+  htmlParts.push('<div style="max-width:820px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(21,43,68,.08)">');
+  htmlParts.push('<div style="background:#f8fafc;padding:20px 26px;border-bottom:2px solid #1A86F1">');
+  htmlParts.push('<h1 style="margin:0;font-size:18px;color:#152B44">Cotizacion COSEINCO</h1>');
+  htmlParts.push('<p style="margin:6px 0 0;font-size:12px;color:#64748b">' + nota + '</p>');
+  htmlParts.push('<p style="margin:2px 0 0;font-size:11px;color:#64748b">T.C. ' + fmt(tc,2) + ' - Margen ' + Math.round(margen*100) + '%</p>');
+  htmlParts.push('</div>');
+  htmlParts.push('<table style="width:100%;border-collapse:collapse;font-size:12.5px">');
+  htmlParts.push('<thead><tr style="background:#f8fafc">');
+  htmlParts.push('<th style="padding:9px;text-align:left;color:#64748b;font-size:10.5px;text-transform:uppercase">Producto</th>');
+  htmlParts.push('<th style="padding:9px;text-align:right;color:#64748b;font-size:10.5px;text-transform:uppercase">Costo</th>');
+  htmlParts.push('<th style="padding:9px;text-align:right;color:#64748b;font-size:10.5px;text-transform:uppercase">PV Unit.</th>');
+  htmlParts.push('<th style="padding:9px;text-align:right;color:#64748b;font-size:10.5px;text-transform:uppercase">PV Total</th>');
+  htmlParts.push('<th style="padding:9px;text-align:right;color:#64748b;font-size:10.5px;text-transform:uppercase">Ganancia</th>');
+  htmlParts.push('</tr></thead>');
+  htmlParts.push('<tbody>' + filas + '</tbody>');
+  htmlParts.push('</table>');
+  htmlParts.push('<div style="background:#152B44;padding:18px 26px;display:flex;justify-content:space-between;align-items:center">');
+  htmlParts.push('<div><div style="font-size:10px;color:#93c5fd;text-transform:uppercase">Ganancia Total</div>');
+  htmlParts.push('<div style="font-size:16px;font-weight:800;color:#4ade80">S/. ' + fmt(totGan) + '</div></div>');
+  htmlParts.push('<div style="text-align:right"><div style="font-size:10px;color:#93c5fd;text-transform:uppercase">Precio de Venta Total</div>');
+  htmlParts.push('<div style="font-size:24px;font-weight:800;color:#fff">S/. ' + fmt(totPV) + '</div></div>');
+  htmlParts.push('</div>');
+  htmlParts.push('</div>');
+  htmlParts.push('</body></html>');
+  return htmlParts.join('');
+}
+
+function descargarHtml(htmlFinal, nombreArchivo){
+  var blob = new Blob([htmlFinal], { type: 'text/html;charset=utf-8' });
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = nombreArchivo;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
+}
+
+function exportarHTML(){
+  if(productos.length === 0){
+    alert('Agrega al menos un producto antes de exportar.');
+    return;
+  }
+  var tc = getTC(), margen = getMargen(), fletesGlobal = getFletesGlobal();
+  var manoObraTotal = gv('manoObraTotal'), visita = gv('visita');
+  var fleteMap = calcularFletesPorProveedor(productos, fletesGlobal);
+  var moMap = calcularManoObraPorProducto(productos, tc, manoObraTotal, fletesGlobal);
+  var ctx = { tc: tc, margen: margen, fletesGlobal: fletesGlobal, fleteMap: fleteMap, moMap: moMap, visita: visita };
+  var nota = byId('notaRapida').value || 'Sin nota';
+
+  var htmlFinal = buildQuoteHtmlDocument(nota, tc, margen, productos, ctx, lastTotals.pv, lastTotals.gan);
+  var safeName = nota.replace(/\s+/g, '_').toLowerCase();
+  descargarHtml(htmlFinal, 'cotizacion_' + safeName + '.html');
+}
+
+// ============================================================
+// HISTORIAL DE COTIZACIONES GUARDADAS
+// ============================================================
+function renderHistorial(){
+  var wrap = byId('historialWrap');
+  if(historial.length === 0){
+    wrap.innerHTML = '<div class="hist-empty"><div class="ic">&#128193;</div>' +
+      'Aun no hay cotizaciones guardadas. Usa el boton <b>Guardar</b> para archivar una cotizacion aqui.</div>';
+    return;
+  }
+
+  var html = '<div class="tbl-outer"><div class="tbl-inner"><table style="min-width:900px">';
+  html += '<thead><tr>' +
+    '<th>Fecha</th><th>Cliente / Nota</th><th>Items</th>' +
+    '<th>PV Total (S/.)</th><th>Ganancia (S/.)</th><th>Acciones</th>' +
+    '</tr></thead><tbody>';
+
+  for(var i=0; i<historial.length; i++){
+    var h = historial[i];
+    html += '<tr>';
+    html += '<td>' + fechaCorta(h.fecha) + '</td>';
+    html += '<td><strong>' + h.nota + '</strong></td>';
+    html += '<td class="num">' + h.productos.length + '</td>';
+    html += '<td class="num" style="font-weight:700;color:var(--blue-dark)">S/. ' + fmt(h.totales.pv) + '</td>';
+    html += '<td class="num g-pos">S/. ' + fmt(h.totales.gan) + '</td>';
+    html += '<td>' +
+      '<button class="btn btn-ghost btn-sm" onclick="historialCargar(\'' + h.id + '\')">Cargar</button> ' +
+      '<button class="btn btn-blue btn-sm" onclick="historialExportarHtml(\'' + h.id + '\')">Exportar HTML</button> ' +
+      '<button class="btn btn-danger btn-sm" onclick="historialEliminar(\'' + h.id + '\')">Eliminar</button>' +
+      '</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table></div></div>';
+  wrap.innerHTML = html;
+}
+
+function buscarEnHistorial(id){
+  for(var i=0; i<historial.length; i++){
+    if(historial[i].id === id) return historial[i];
+  }
+  return null;
+}
+
+function historialCargar(id){
+  var h = buscarEnHistorial(id);
+  if(!h) return;
+
+  function cargar(){
+    productos = JSON.parse(JSON.stringify(h.productos));
+    var maxId = 0;
+    for(var i=0; i<productos.length; i++){ if(productos[i].id > maxId) maxId = productos[i].id; }
+    nextId = maxId + 1;
+    byId('notaRapida').value = h.nota;
+    byId('tc').value = h.params.tc;
+    byId('margen').value = h.params.margen;
+    byId('manoObraTotal').value = h.params.manoObraTotal;
+    byId('visita').value = h.params.visita;
+    byId('fleteIngram').value = h.params.fleteIngram;
+    byId('fleteIntcomex').value = h.params.fleteIntcomex;
+    byId('fleteDeltron').value = h.params.fleteDeltron;
+    byId('fleteOtros').value = h.params.fleteOtros;
+    setLocked(false);
+  }
+
+  if(productos.length > 0){
+    showConfirm('Se reemplazara la cotizacion actual en edicion por la cotizacion guardada "' + h.nota + '". Continuar?', cargar);
+  } else {
+    cargar();
+  }
+}
+
+function historialExportarHtml(id){
+  var h = buscarEnHistorial(id);
+  if(!h) return;
+  var fletesGlobal = [h.params.fleteIngram, h.params.fleteIntcomex, h.params.fleteDeltron, h.params.fleteOtros];
+  var fleteMap = calcularFletesPorProveedor(h.productos, fletesGlobal);
+  var moMap = calcularManoObraPorProducto(h.productos, h.params.tc, h.params.manoObraTotal, fletesGlobal);
+  var ctx = { tc: h.params.tc, margen: h.params.margen/100, fletesGlobal: fletesGlobal, fleteMap: fleteMap, moMap: moMap, visita: h.params.visita };
+
+  var htmlFinal = buildQuoteHtmlDocument(h.nota, h.params.tc, h.params.margen/100, h.productos, ctx, h.totales.pv, h.totales.gan);
+  var safeName = h.nota.replace(/\s+/g, '_').toLowerCase();
+  descargarHtml(htmlFinal, 'cotizacion_' + safeName + '.html');
+}
+
+function historialEliminar(id){
+  showConfirm('Esta accion eliminara permanentemente esta cotizacion del historial. Continuar?', function(){
+    var nuevos = [];
+    for(var i=0; i<historial.length; i++){
+      if(historial[i].id !== id) nuevos.push(historial[i]);
+    }
+    historial = nuevos;
+    renderHistorial();
+  });
+}
+
+onCatChange();
+recalcularTodo();
+renderHistorial();
+
+window.onCatChange = onCatChange;
+window.setLocked = setLocked;
+window.guardarCotizacion = guardarCotizacion;
+window.editarCotizacion = editarCotizacion;
+window.nuevaCotizacion = nuevaCotizacion;
+window.agregarProducto = agregarProducto;
+window.eliminarProducto = eliminarProducto;
+window.agregarDemo = agregarDemo;
+window.exportarHTML = exportarHTML;
+window.recalcularTodo = recalcularTodo;
+window.showConfirm = showConfirm;
+window.hideConfirm = hideConfirm;
+window.historialCargar = historialCargar;
+window.historialExportarHtml = historialExportarHtml;
+window.historialEliminar = historialEliminar;
 </script>
 </body>
 </html>
