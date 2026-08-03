@@ -132,6 +132,79 @@
     max-width:380px;width:100%;box-shadow:0 20px 60px rgba(21,43,68,.25)}
   .modal-box p{margin:0 0 18px;font-size:13.5px;color:var(--txt);line-height:1.5}
   .modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+  .hidden{display:none !important}
+
+  .mode-toggle{display:flex;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:12px 18px;margin-bottom:18px;align-items:center;flex-wrap:wrap;box-shadow:0 2px 10px rgba(21,43,68,.05)}
+  .mode-toggle .lbl{font-size:11px;font-weight:800;color:var(--txt-muted);text-transform:uppercase;letter-spacing:.4px;margin-right:6px}
+  .mode-btn{padding:9px 16px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--txt-muted);
+    font-weight:700;font-size:12.5px;cursor:pointer;transition:.15s}
+  .mode-btn.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 3px 10px rgba(26,134,241,.28)}
+  .mode-btn:not(.active):hover{border-color:var(--blue);color:var(--blue-dark)}
+
+  .alt-comp-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--line)}
+  .alt-comp-table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:600px}
+  .alt-comp-table th, .alt-comp-table td{padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+  .alt-comp-table thead th{background:var(--panel2);color:var(--navy);font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.3px;text-align:center;position:relative}
+  .alt-comp-table thead th.baseline-col{background:rgba(26,134,241,.08)}
+  .alt-comp-table tbody td{text-align:center}
+  .alt-comp-table tbody th{text-align:left;background:var(--panel2);color:var(--txt-muted);font-size:10.5px;
+    text-transform:uppercase;letter-spacing:.3px;font-weight:700}
+  .alt-comp-table .metric-strong{font-weight:800;color:var(--navy)}
+  .alt-comp-table .metric-usd{color:var(--blue-dark);font-weight:700}
+  .badge-reco{display:inline-flex;align-items:center;gap:4px;background:rgba(22,163,74,.12);color:var(--green-dark);
+    font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:.3px}
+  .badge-type{display:inline-flex;align-items:center;font-size:9.5px;font-weight:800;padding:2px 8px;
+    border-radius:999px;text-transform:uppercase;letter-spacing:.3px}
+  .badge-type.agrupado{background:rgba(26,134,241,.1);color:var(--blue-dark)}
+  .badge-type.alternativas{background:rgba(124,58,237,.1);color:#7c3aed}
+  .var-pos{color:var(--red);font-weight:700}
+  .var-neg{color:var(--green-dark);font-weight:700}
+  .var-zero{color:var(--txt-muted)}
+  .alt-col-actions{display:flex;flex-direction:column;gap:5px;align-items:center}
+
+  .calc-fab{position:fixed;bottom:22px;right:22px;width:54px;height:54px;border-radius:50%;
+    background:var(--blue);color:#fff;border:none;box-shadow:0 6px 20px rgba(26,134,241,.4);
+    cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;z-index:9990;
+    transition:.15s}
+  .calc-fab:hover{background:var(--blue-dark);transform:scale(1.05)}
+  .calc-panel{position:fixed;bottom:86px;right:22px;width:290px;background:#fff;border:1px solid var(--line);
+    border-radius:16px;box-shadow:0 12px 40px rgba(21,43,68,.25);z-index:9990;display:none;overflow:hidden}
+  .calc-panel.show{display:block}
+  .calc-head{display:flex;align-items:center;justify-content:space-between;background:var(--navy);color:#fff;
+    padding:12px 16px;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+  .calc-head button{background:none;border:none;color:#fff;font-size:16px;cursor:pointer;opacity:.75;line-height:1}
+  .calc-head button:hover{opacity:1}
+  .calc-tabs{display:flex;border-bottom:1px solid var(--line)}
+  .calc-tab{flex:1;padding:9px;text-align:center;font-size:11px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.3px;color:var(--txt-muted);cursor:pointer;background:var(--panel2);border:none}
+  .calc-tab.active{background:#fff;color:var(--blue-dark);box-shadow:inset 0 -2px 0 var(--blue)}
+  .calc-body{padding:14px}
+  .calc-display{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    padding:12px;text-align:right;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:10px;
+    box-sizing:border-box}
+  .calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+  .calc-btn{padding:11px 0;border-radius:8px;border:1px solid var(--line);background:var(--panel2);
+    color:var(--txt);font-size:14px;font-weight:700;cursor:pointer}
+  .calc-btn:hover{background:#eef2f7}
+  .calc-btn.op{background:rgba(26,134,241,.1);color:var(--blue-dark)}
+  .calc-btn.eq{background:var(--blue);color:#fff;grid-column:span 2}
+  .calc-btn.clear{background:rgba(220,38,38,.1);color:var(--red)}
+  .tax-field label{font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:var(--txt-muted);
+    font-weight:700;display:block;margin-bottom:4px}
+  .tax-field input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;font-size:13px;
+    margin-bottom:10px;box-sizing:border-box}
+  .tax-actions{display:flex;gap:6px;margin-bottom:12px}
+  .tax-actions button{flex:1;padding:9px 0;border-radius:8px;border:none;font-size:11.5px;font-weight:700;
+    cursor:pointer;color:#fff}
+  .tax-btn-quitar{background:var(--red)}
+  .tax-btn-agregar{background:var(--green)}
+  .tax-results{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    font-size:12px}
+  .tax-results div{display:flex;justify-content:space-between;padding:3px 0}
+  .tax-results b{color:var(--navy)}
 </style>
 </head>
 <body>
@@ -174,7 +247,13 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="mode-toggle">
+    <span class="lbl">Modo de Cotizacion:</span>
+    <button class="mode-btn active" id="btnModoAgrupado" onclick="setModo('agrupado')">Agrupado / Paquete</button>
+    <button class="mode-btn" id="btnModoAlternativas" onclick="setModo('alternativas')">Alternativas / Opciones</button>
+  </div>
+
+  <div class="card modo-agrupado">
     <h2>Parametros Globales</h2>
     <div class="grid grid-6">
       <div class="field"><label>Tipo de Cambio</label><input type="number" id="tc" class="lockable" value="3.75" step="0.01" oninput="recalcularTodo()"></div>
@@ -192,7 +271,7 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card modo-agrupado">
     <h2>Agregar Producto</h2>
     <div class="grid grid-4">
       <div class="field"><label>Categoria</label>
@@ -222,18 +301,18 @@
     </div>
   </div>
 
-  <div class="card">
+  <div class="card modo-agrupado">
     <h2>Estructura de Costos e Items</h2>
     <div class="tbl-outer">
       <div class="tbl-inner">
         <table>
           <thead>
             <tr>
-              <th>Cat.</th><th>Producto</th><th>Cant.</th><th>Tang.</th><th>Ens.</th>
+              <th>Sel.</th><th>Cat.</th><th>Producto</th><th>Cant.</th><th>Tang.</th><th>Ens.</th>
               <th>Ingram $</th><th>Intcomex $</th><th>Deltron $</th><th>Otros $</th>
               <th>Mejor Prov.</th><th>Compra USD</th><th>Compra S/.</th>
               <th>Flete S/.</th><th>M.O. S/.</th><th>Costo Total</th>
-              <th>PV Unit.</th><th>PV Total</th><th>Ganancia</th><th></th>
+              <th>PV Unit.</th><th>PV Total</th><th>Ganancia</th><th>PV Total (USD)</th><th></th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
@@ -241,9 +320,12 @@
       </div>
     </div>
     <div class="summary-grid" id="summaryGrid"></div>
+    <div class="form-actions" style="margin-top:16px">
+      <button class="btn btn-blue lockable" onclick="transferirProductosSeleccionados()">Transferir Seleccionados a Alternativas</button>
+    </div>
   </div>
 
-  <div class="card">
+  <div class="card modo-agrupado">
     <h2>Modulo de Escenarios</h2>
     <div class="grid grid-4" style="margin-bottom:16px">
       <div class="field"><label>Descuento % simulado</label><input type="number" id="escDescuento" value="5" step="1" oninput="recalcularTodo()"></div>
@@ -253,9 +335,48 @@
     <div class="esc-grid" id="escGrid"></div>
   </div>
 
-  <div class="card" style="text-align:center">
+  <div class="card modo-agrupado" style="text-align:center">
     <button class="btn btn-green" onclick="exportarHTML()">Exportar como HTML</button>
     <button class="btn btn-ghost" style="margin-left:10px" onclick="agregarDemo()">Cargar datos de ejemplo</button>
+    <div style="font-size:10.5px;color:var(--txt-muted);margin-top:10px">
+      En Chrome o Edge se abrira el dialogo nativo para elegir la carpeta de guardado. En otros navegadores se usara la descarga estandar.
+    </div>
+  </div>
+
+  <div class="card modo-alternativas hidden">
+    <h2>Cotizacion por Alternativas / Opciones Comparativas</h2>
+    <p style="font-size:12px;color:var(--txt-muted);margin:-6px 0 16px">
+      Cada alternativa se calcula de forma independiente (no se suman entre si). Usa el Tipo de Cambio (T.C.) de
+      Parametros Globales para la conversion a USD. La Comision % se descuenta de la utilidad neta del vendedor,
+      no afecta el precio final al cliente.
+    </p>
+    <div class="grid grid-4">
+      <div class="field"><label>Nombre / Especificacion</label><input type="text" id="altNombre" class="lockable" placeholder="Ej: Laptop Lenovo ThinkPad E16"></div>
+      <div class="field"><label>Descripcion corta</label><input type="text" id="altDescripcion" class="lockable" placeholder="Ej: i7, 16GB RAM, 512GB SSD"></div>
+      <div class="field"><label>Costo Proveedor Neto (S/.)</label><input type="number" id="altCosto" class="lockable" value="0" step="0.01"></div>
+      <div class="field"><label>Flete / Gastos Oper. (S/.)</label><input type="number" id="altFlete" class="lockable" value="0" step="0.01"></div>
+      <div class="field"><label>Margen Comercial %</label><input type="number" id="altMargen" class="lockable" value="20" step="1"></div>
+      <div class="field"><label>Impuesto IGV/IVA %</label><input type="number" id="altImpuesto" class="lockable" value="18" step="0.5"></div>
+      <div class="field"><label>Comision Vendedor %</label><input type="number" id="altComision" class="lockable" value="0" step="0.5">
+        <div class="hint">Se descuenta de la utilidad, no del precio al cliente</div>
+      </div>
+      <div class="field"><label>Tipo de Cambio (S/. &rarr; US$)</label><input type="number" id="altTC" class="lockable" value="3.75" step="0.01">
+        <div class="hint">Independiente por alternativa, editable luego en la tabla comparativa</div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-blue lockable" onclick="agregarAlternativa()">Agregar Alternativa</button>
+    </div>
+
+    <div style="margin-top:20px">
+      <div class="alt-comp-wrap">
+        <table class="alt-comp-table" id="altComparativaTable"></table>
+      </div>
+    </div>
+
+    <div class="form-actions" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="exportarAlternativasHTML()">Exportar Comparativa como HTML</button>
+    </div>
   </div>
 
   <div class="card">
@@ -276,6 +397,68 @@
   </div>
 </div>
 
+<button class="calc-fab" onclick="toggleCalcPanel()" title="Calculadora rapida">&#128290;</button>
+
+<div class="calc-panel" id="calcPanel">
+  <div class="calc-head">
+    <span>Calculadora Rapida</span>
+    <button onclick="toggleCalcPanel()">&times;</button>
+  </div>
+  <div class="calc-tabs">
+    <button class="calc-tab active" id="tabCalcBasic" onclick="showCalcTab('basic')">Calculadora</button>
+    <button class="calc-tab" id="tabCalcTax" onclick="showCalcTab('tax')">Impuestos</button>
+  </div>
+
+  <div class="calc-body" id="calcBodyBasic">
+    <input type="text" class="calc-display" id="calcDisplay" value="0">
+    <div class="calc-grid">
+      <button class="calc-btn clear" onclick="calcClear()">C</button>
+      <button class="calc-btn" onclick="calcBackspace()">&#9003;</button>
+      <button class="calc-btn op" onclick="calcAppend('%')">%</button>
+      <button class="calc-btn op" onclick="calcAppend('/')">&divide;</button>
+
+      <button class="calc-btn" onclick="calcAppend('7')">7</button>
+      <button class="calc-btn" onclick="calcAppend('8')">8</button>
+      <button class="calc-btn" onclick="calcAppend('9')">9</button>
+      <button class="calc-btn op" onclick="calcAppend('*')">&times;</button>
+
+      <button class="calc-btn" onclick="calcAppend('4')">4</button>
+      <button class="calc-btn" onclick="calcAppend('5')">5</button>
+      <button class="calc-btn" onclick="calcAppend('6')">6</button>
+      <button class="calc-btn op" onclick="calcAppend('-')">-</button>
+
+      <button class="calc-btn" onclick="calcAppend('1')">1</button>
+      <button class="calc-btn" onclick="calcAppend('2')">2</button>
+      <button class="calc-btn" onclick="calcAppend('3')">3</button>
+      <button class="calc-btn op" onclick="calcAppend('+')">+</button>
+
+      <button class="calc-btn" onclick="calcAppend('0')">0</button>
+      <button class="calc-btn" onclick="calcAppend('.')">.</button>
+      <button class="calc-btn eq" onclick="calcEquals()">=</button>
+    </div>
+  </div>
+
+  <div class="calc-body hidden" id="calcBodyTax">
+    <div class="tax-field">
+      <label>Monto (S/. o US$)</label>
+      <input type="number" id="taxMonto" step="0.01" placeholder="Ej: 3800.00">
+    </div>
+    <div class="tax-field">
+      <label>% Impuesto (IGV/IVA)</label>
+      <input type="number" id="taxPct" step="0.5" value="18">
+    </div>
+    <div class="tax-actions">
+      <button class="tax-btn-quitar" onclick="taxQuitarImpuesto()">Quitar Impuesto</button>
+      <button class="tax-btn-agregar" onclick="taxAgregarImpuesto()">Agregar Impuesto</button>
+    </div>
+    <div class="tax-results" id="taxResults">
+      <div><span>Sin Impuesto:</span><b id="taxResSin">-</b></div>
+      <div><span>Con Impuesto:</span><b id="taxResCon">-</b></div>
+      <div><span>Monto Impuesto:</span><b id="taxResMonto">-</b></div>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 var productos = [];
 var nextId = 1;
@@ -283,6 +466,9 @@ var isLocked = false;
 var historial = [];
 var lastCtx = null;
 var lastTotals = { costo: 0, pv: 0, gan: 0 };
+var alternativas = [];
+var nextAltId = 1;
+var modoCotizacion = 'agrupado';
 var PROVEEDORES = ['Ingram', 'Intcomex', 'Deltron', 'Otros'];
 var PROV_KEYS = ['i', 'x', 'd', 'o'];
 var FLETE_IDS = ['fleteIngram', 'fleteIntcomex', 'fleteDeltron', 'fleteOtros'];
@@ -340,6 +526,7 @@ function setLocked(locked){
     badge.textContent = 'Editando';
   }
   recalcularTodo();
+  renderComparativa();
 }
 
 function showConfirm(mensaje, onOk){
@@ -358,12 +545,36 @@ function hideConfirm(){
 }
 
 function guardarCotizacion(){
+  if(modoCotizacion === 'alternativas'){
+    if(alternativas.length === 0){
+      alert('Agrega al menos una alternativa antes de guardar la cotizacion.');
+      return;
+    }
+    var tcGlobal = getTC();
+    var recomendada = alternativas[0];
+    for(var i=0;i<alternativas.length;i++){ if(alternativas[i].recommended) recomendada = alternativas[i]; }
+    var resReco = calcularAlternativa(recomendada);
+    var snapAlt = {
+      id: 'q_' + Date.now(),
+      tipo: 'alternativas',
+      fecha: new Date(),
+      nota: byId('notaRapida').value || 'Sin nota',
+      alternativas: JSON.parse(JSON.stringify(alternativas)),
+      totales: { costo: resReco.costoNeto, pv: resReco.PVNeto, gan: resReco.utilidadNeta }
+    };
+    historial.unshift(snapAlt);
+    setLocked(true);
+    renderHistorial();
+    return;
+  }
+
   if(productos.length === 0){
     alert('Agrega al menos un producto antes de guardar la cotizacion.');
     return;
   }
   var snap = {
     id: 'q_' + Date.now(),
+    tipo: 'agrupado',
     fecha: new Date(),
     nota: byId('notaRapida').value || 'Sin nota',
     productos: JSON.parse(JSON.stringify(productos)),
@@ -386,6 +597,8 @@ function nuevaCotizacion(){
   function reiniciar(){
     productos = [];
     nextId = 1;
+    alternativas = [];
+    nextAltId = 1;
     byId('notaRapida').value = '';
     byId('tc').value = 3.75;
     byId('margen').value = 20;
@@ -397,8 +610,8 @@ function nuevaCotizacion(){
     byId('fleteOtros').value = 40;
     setLocked(false);
   }
-  if(productos.length > 0){
-    showConfirm('Se limpiara la cotizacion actual (productos y nota). Los parametros globales volveran a sus valores por defecto. Continuar?', reiniciar);
+  if(productos.length > 0 || alternativas.length > 0){
+    showConfirm('Se limpiara la cotizacion actual (productos, alternativas y nota). Los parametros globales volveran a sus valores por defecto. Continuar?', reiniciar);
   } else {
     reiniciar();
   }
@@ -522,6 +735,8 @@ function calcularFila(p, ctx){
 
 function buildRowHtml(p, idx, r, dis){
   var html = '';
+  html += '<td style="text-align:center"><input type="checkbox" class="row-chk" ' + (p.selected ? 'checked' : '') + ' ' + dis +
+    ' onchange="productos[' + idx + '].selected=this.checked"></td>';
   html += '<td><span class="tag tag-' + p.cat + '">' + p.cat + '</span></td>';
   html += '<td><input class="cell-input" style="width:130px;text-align:left" value="' + p.nombre + '" ' + dis +
     ' onchange="productos[' + idx + '].nombre=this.value;recalcularTodo()"></td>';
@@ -558,6 +773,9 @@ function buildRowHtml(p, idx, r, dis){
   html += '<td class="num" style="font-weight:700">' + fmt(r.pvUnit) + '</td>';
   html += '<td class="num" style="font-weight:800;color:var(--blue-dark)">' + fmt(r.pvTotal) + '</td>';
   html += '<td class="num ' + (r.ganTotal >= 0 ? 'g-pos' : 'g-neg') + '">' + fmt(r.ganTotal) + '</td>';
+  var tcRow = getTC();
+  var pvTotalUSD = tcRow > 0 ? (r.pvTotal / tcRow) : 0;
+  html += '<td class="num metric-usd" style="color:var(--blue-dark);font-weight:700">$ ' + fmt(pvTotalUSD) + '</td>';
   html += '<td><button class="btn btn-danger btn-sm" ' + dis + ' onclick="eliminarProducto(' + p.id + ')">X</button></td>';
   return html;
 }
@@ -593,7 +811,7 @@ function recalcularTodo(){
   }
 
   if(productos.length === 0){
-    tbody.innerHTML = '<tr><td colspan="18" style="text-align:center;padding:30px;color:var(--txt-muted)">No hay productos agregados. Usa el formulario de arriba o carga datos de ejemplo.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="20" style="text-align:center;padding:30px;color:var(--txt-muted)">No hay productos agregados. Usa el formulario de arriba o carga datos de ejemplo.</td></tr>';
   }
 
   var sumHtml = '';
@@ -660,6 +878,271 @@ function renderEscenarios(ctxBase, pvBase, ganBase){
   byId('escGrid').innerHTML = html;
 }
 
+// ============================================================
+// MODO DE COTIZACION: AGRUPADO vs ALTERNATIVAS
+// ============================================================
+function setModo(m){
+  modoCotizacion = m;
+  var agrupadoCards = document.querySelectorAll('.modo-agrupado');
+  var altCards = document.querySelectorAll('.modo-alternativas');
+  var i;
+  if(m === 'agrupado'){
+    for(i=0;i<agrupadoCards.length;i++){ agrupadoCards[i].classList.remove('hidden'); }
+    for(i=0;i<altCards.length;i++){ altCards[i].classList.add('hidden'); }
+    byId('btnModoAgrupado').classList.add('active');
+    byId('btnModoAlternativas').classList.remove('active');
+  } else {
+    for(i=0;i<agrupadoCards.length;i++){ agrupadoCards[i].classList.add('hidden'); }
+    for(i=0;i<altCards.length;i++){ altCards[i].classList.remove('hidden'); }
+    byId('btnModoAgrupado').classList.remove('active');
+    byId('btnModoAlternativas').classList.add('active');
+    renderComparativa();
+  }
+}
+
+// ============================================================
+// MODO ALTERNATIVAS: CALCULO
+// Comision % se descuenta de la Utilidad Neta (no afecta el Precio de Venta al cliente)
+// ============================================================
+function calcularAlternativa(alt){
+  var tc = parseFloat(alt.tc) || 0;
+  var costoNeto = (parseFloat(alt.costoProveedor)||0) + (parseFloat(alt.flete)||0);
+  var margenFrac = (parseFloat(alt.margen)||0) / 100;
+  var PVNeto = margenFrac < 1 ? costoNeto / (1 - margenFrac) : costoNeto;
+  var utilidadNominal = PVNeto - costoNeto;
+  var comisionMonto = PVNeto * ((parseFloat(alt.comision)||0) / 100);
+  var utilidadNeta = utilidadNominal - comisionMonto;
+  var impuestoFrac = (parseFloat(alt.impuesto)||0) / 100;
+  var PVBrutoLocal = PVNeto * (1 + impuestoFrac);
+  var PVNetoUSD = tc > 0 ? PVNeto / tc : 0;
+  var PVBrutoUSD = tc > 0 ? PVBrutoLocal / tc : 0;
+
+  return {
+    tc: tc, costoNeto: costoNeto, PVNeto: PVNeto, utilidadNominal: utilidadNominal,
+    comisionMonto: comisionMonto, utilidadNeta: utilidadNeta,
+    PVBrutoLocal: PVBrutoLocal, PVNetoUSD: PVNetoUSD, PVBrutoUSD: PVBrutoUSD
+  };
+}
+
+function agregarAlternativa(){
+  if(isLocked){
+    alert('La cotizacion esta guardada. Presiona Editar para modificarla.');
+    return;
+  }
+  var nombre = byId('altNombre').value.replace(/^\s+|\s+$/g,'') || 'Alternativa sin nombre';
+  var descripcion = byId('altDescripcion').value.replace(/^\s+|\s+$/g,'');
+  var alt = {
+    id: nextAltId,
+    nombre: nombre,
+    descripcion: descripcion,
+    costoProveedor: gv('altCosto'),
+    flete: gv('altFlete'),
+    margen: gv('altMargen'),
+    impuesto: gv('altImpuesto'),
+    comision: gv('altComision'),
+    tc: gv('altTC') || 3.75,
+    recommended: alternativas.length === 0
+  };
+  nextAltId = nextAltId + 1;
+  alternativas.push(alt);
+
+  byId('altNombre').value = '';
+  byId('altDescripcion').value = '';
+  byId('altCosto').value = 0;
+  byId('altFlete').value = 0;
+  byId('altMargen').value = 20;
+  byId('altImpuesto').value = 18;
+  byId('altComision').value = 0;
+  byId('altTC').value = 3.75;
+
+  renderComparativa();
+}
+
+function eliminarAlternativa(id){
+  if(isLocked) return;
+  var nuevos = [];
+  for(var i=0;i<alternativas.length;i++){
+    if(alternativas[i].id !== id) nuevos.push(alternativas[i]);
+  }
+  alternativas = nuevos;
+  if(alternativas.length > 0){
+    var yaHayRecomendada = false;
+    for(i=0;i<alternativas.length;i++){ if(alternativas[i].recommended) yaHayRecomendada = true; }
+    if(!yaHayRecomendada) alternativas[0].recommended = true;
+  }
+  renderComparativa();
+}
+
+function marcarRecomendada(id){
+  if(isLocked) return;
+  for(var i=0;i<alternativas.length;i++){
+    alternativas[i].recommended = (alternativas[i].id === id);
+  }
+  renderComparativa();
+}
+
+function fmtPct(n){
+  var sign = n > 0 ? '+' : '';
+  return sign + n.toFixed(1) + '%';
+}
+
+// ============================================================
+// WIDGET FLOTANTE: CALCULADORA RAPIDA + CONVERSOR DE IMPUESTOS
+// ============================================================
+var calcExpr = '';
+
+function toggleCalcPanel(){
+  var panel = byId('calcPanel');
+  panel.classList.toggle('show');
+}
+
+function showCalcTab(tab){
+  var bodyBasic = byId('calcBodyBasic');
+  var bodyTax = byId('calcBodyTax');
+  var tabBasic = byId('tabCalcBasic');
+  var tabTax = byId('tabCalcTax');
+  if(tab === 'basic'){
+    bodyBasic.classList.remove('hidden');
+    bodyTax.classList.add('hidden');
+    tabBasic.classList.add('active');
+    tabTax.classList.remove('active');
+  } else {
+    bodyBasic.classList.add('hidden');
+    bodyTax.classList.remove('hidden');
+    tabBasic.classList.remove('active');
+    tabTax.classList.add('active');
+  }
+}
+
+function calcAppend(ch){
+  if(calcExpr === '0' && ch !== '.' && ch !== '%'){ calcExpr = ''; }
+  calcExpr += ch;
+  byId('calcDisplay').value = calcExpr;
+}
+
+function calcBackspace(){
+  calcExpr = calcExpr.slice(0, -1);
+  byId('calcDisplay').value = calcExpr === '' ? '0' : calcExpr;
+}
+
+function calcClear(){
+  calcExpr = '';
+  byId('calcDisplay').value = '0';
+}
+
+function calcEquals(){
+  if(!calcExpr){ return; }
+  var safeExpr = calcExpr.replace(/[^0-9+\-*/.%() ]/g, '');
+  var resultado;
+  try{
+    resultado = Function('"use strict"; return (' + safeExpr + ')')();
+    if(resultado === undefined || isNaN(resultado) || !isFinite(resultado)){
+      byId('calcDisplay').value = 'Error';
+      calcExpr = '';
+      return;
+    }
+  } catch(e){
+    byId('calcDisplay').value = 'Error';
+    calcExpr = '';
+    return;
+  }
+  resultado = Math.round(resultado * 1000000) / 1000000;
+  calcExpr = String(resultado);
+  byId('calcDisplay').value = calcExpr;
+}
+
+function taxQuitarImpuesto(){
+  var monto = parseFloat(byId('taxMonto').value) || 0;
+  var pct = parseFloat(byId('taxPct').value) || 0;
+  var sinImpuesto = monto / (1 + pct/100);
+  var montoImpuesto = monto - sinImpuesto;
+  byId('taxResSin').textContent = fmt(sinImpuesto);
+  byId('taxResCon').textContent = fmt(monto);
+  byId('taxResMonto').textContent = fmt(montoImpuesto);
+}
+
+function taxAgregarImpuesto(){
+  var monto = parseFloat(byId('taxMonto').value) || 0;
+  var pct = parseFloat(byId('taxPct').value) || 0;
+  var conImpuesto = monto * (1 + pct/100);
+  var montoImpuesto = conImpuesto - monto;
+  byId('taxResSin').textContent = fmt(monto);
+  byId('taxResCon').textContent = fmt(conImpuesto);
+  byId('taxResMonto').textContent = fmt(montoImpuesto);
+}
+
+function renderComparativa(){
+  var tabla = byId('altComparativaTable');
+  if(!tabla) return;
+
+  if(alternativas.length === 0){
+    tabla.innerHTML = '<tbody><tr><td style="padding:30px;text-align:center;color:var(--txt-muted)">' +
+      'No hay alternativas agregadas. Usa el formulario de arriba o transfiere productos desde Agrupado.</td></tr></tbody>';
+    return;
+  }
+
+  var resultados = [];
+  for(var i=0;i<alternativas.length;i++){
+    resultados.push(calcularAlternativa(alternativas[i]));
+  }
+  var basePVNeto = resultados[0].PVNeto;
+
+  var dis = isLocked ? 'disabled' : '';
+
+  var head = '<thead><tr><th style="text-align:left">Metrica</th>';
+  for(i=0;i<alternativas.length;i++){
+    var a = alternativas[i];
+    var thCls = i === 0 ? 'baseline-col' : '';
+    head += '<th class="' + thCls + '">' + a.nombre +
+      (a.recommended ? '<br><span class="badge-reco">Recomendada</span>' : '') + '</th>';
+  }
+  head += '</tr></thead>';
+
+  function fila(label, valores){
+    var row = '<tr><th>' + label + '</th>';
+    for(var j=0;j<valores.length;j++){ row += '<td>' + valores[j] + '</td>'; }
+    row += '</tr>';
+    return row;
+  }
+
+  var body = '<tbody>';
+  body += fila('Descripcion', alternativas.map(function(a){ return a.descripcion || '-'; }));
+  body += fila('Tipo de Cambio (S/. &rarr; US$)', alternativas.map(function(a, idx){
+    return '<input class="cell-input" style="width:60px;text-align:center" type="number" step="0.01" value="' + (a.tc||0) + '" ' + dis +
+      ' onchange="alternativas[' + idx + '].tc=parseFloat(this.value)||0;renderComparativa()">';
+  }));
+  body += fila('Costo Proveedor Neto (S/.)', resultados.map(function(r){ return 'S/. ' + fmt(r.costoNeto); }));
+  body += fila('Margen Comercial %', alternativas.map(function(a){ return (parseFloat(a.margen)||0) + '%'; }));
+  body += fila('Utilidad Nominal (S/.)', resultados.map(function(r){ return 'S/. ' + fmt(r.utilidadNominal); }));
+  body += fila('Comision Vendedor (S/.)', resultados.map(function(r){ return r.comisionMonto > 0 ? '- S/. ' + fmt(r.comisionMonto) : '-'; }));
+  body += fila('Utilidad Neta (S/.)', resultados.map(function(r){
+    return '<span class="' + (r.utilidadNeta >= 0 ? 'g-pos' : 'g-neg') + '">S/. ' + fmt(r.utilidadNeta) + '</span>';
+  }));
+  body += fila('P.V. Unit. Neto (S/.)', resultados.map(function(r){ return '<span class="metric-strong">S/. ' + fmt(r.PVNeto) + '</span>'; }));
+  body += fila('P.V. Unit. Bruto c/Imp. (S/.)', resultados.map(function(r){ return 'S/. ' + fmt(r.PVBrutoLocal); }));
+  body += fila('Precio de Venta (US$)', resultados.map(function(r){ return '<span class="metric-usd">$ ' + fmt(r.PVNetoUSD) + '</span>'; }));
+  body += fila('P.V. Unit. Bruto c/Imp. (US$)', resultados.map(function(r){ return '<span class="metric-usd">$ ' + fmt(r.PVBrutoUSD) + '</span>'; }));
+  body += fila('Variacion vs Opcion 1', resultados.map(function(r, idx){
+    if(idx === 0) return '<span class="var-zero">Base</span>';
+    var pct = basePVNeto > 0 ? ((r.PVNeto - basePVNeto) / basePVNeto) * 100 : 0;
+    var cls = pct > 0 ? 'var-pos' : (pct < 0 ? 'var-neg' : 'var-zero');
+    return '<span class="' + cls + '">' + fmtPct(pct) + '</span>';
+  }));
+
+  var accionesRow = '<tr><th>Acciones</th>';
+  for(i=0;i<alternativas.length;i++){
+    accionesRow += '<td><div class="alt-col-actions">' +
+      '<button class="btn btn-ghost btn-sm" ' + dis + ' onclick="marcarRecomendada(' + alternativas[i].id + ')">Marcar Recomendada</button>' +
+      '<button class="btn btn-danger btn-sm" ' + dis + ' onclick="eliminarAlternativa(' + alternativas[i].id + ')">Eliminar</button>' +
+      '</div></td>';
+  }
+  accionesRow += '</tr>';
+  body += accionesRow;
+  body += '</tbody>';
+
+  tabla.innerHTML = head + body;
+}
+
 function agregarProducto(){
   if(isLocked){
     alert('La cotizacion esta guardada. Presiona Editar para modificarla.');
@@ -673,7 +1156,7 @@ function agregarProducto(){
   var ensamble = byId('fEnsamble').checked;
 
   var p = { id: nextId, cat: cat, nombre: nombre, qty: qty, tangible: tangible, ensamble: ensamble,
-    i:0, x:0, d:0, o:0, precioDirecto:0 };
+    i:0, x:0, d:0, o:0, precioDirecto:0, selected:false };
   nextId = nextId + 1;
 
   if(cat === 'T'){
@@ -703,15 +1186,84 @@ function eliminarProducto(id){
   recalcularTodo();
 }
 
+// ============================================================
+// TRANSFERENCIA: Productos de "Agrupado / Paquete" -> "Alternativas / Opciones"
+// Conserva costo, flete, margen, impuesto y comision aproximada. Cada producto
+// seleccionado se convierte en una Alternativa independiente que compite con
+// las demas dentro de la tabla comparativa.
+// ============================================================
+function transferirProductosSeleccionados(){
+  if(isLocked){
+    alert('La cotizacion esta guardada. Presiona Editar para modificarla.');
+    return;
+  }
+  var seleccionados = [];
+  for(var i=0;i<productos.length;i++){ if(productos[i].selected) seleccionados.push(productos[i]); }
+
+  if(seleccionados.length === 0){
+    alert('Selecciona al menos un producto (columna Sel.) antes de transferir.');
+    return;
+  }
+  if(!lastCtx){
+    alert('No se pudo calcular el contexto actual. Intenta de nuevo.');
+    return;
+  }
+
+  var margenGlobal = gv('margen');
+  var tcActual = gv('tc') || 3.75;
+  var transferidos = 0;
+
+  for(i=0;i<seleccionados.length;i++){
+    var p = seleccionados[i];
+    var r = calcularFila(p, lastCtx);
+
+    var costoProveedorAlt, fleteAlt, margenAlt;
+    if(p.cat === 'V'){
+      costoProveedorAlt = r.costoTotal;
+      fleteAlt = 0;
+      margenAlt = 0;
+    } else if(p.cat === 'L' || p.cat === 'S'){
+      costoProveedorAlt = p.precioDirecto || 0;
+      fleteAlt = 0;
+      margenAlt = margenGlobal;
+    } else {
+      costoProveedorAlt = r.compraSoles;
+      fleteAlt = (r.fleteSoles + r.moSoles) / p.qty;
+      margenAlt = margenGlobal;
+    }
+
+    var nuevaAlt = {
+      id: nextAltId,
+      nombre: p.nombre,
+      descripcion: 'Transferido desde Agrupado (' + p.cat + ', Cant: ' + p.qty + ')',
+      costoProveedor: costoProveedorAlt,
+      flete: fleteAlt,
+      margen: margenAlt,
+      impuesto: 18,
+      comision: 0,
+      tc: tcActual,
+      recommended: alternativas.length === 0
+    };
+    nextAltId = nextAltId + 1;
+    alternativas.push(nuevaAlt);
+    p.selected = false;
+    transferidos++;
+  }
+
+  recalcularTodo();
+  setModo('alternativas');
+  alert(transferidos + ' producto(s) transferido(s) a Alternativas / Opciones. Puedes ajustar su Tipo de Cambio, margen o impuesto directamente en la tabla comparativa.');
+}
+
 function agregarDemo(){
   productos = [
-    { id: 1, cat:'T', nombre:'Laptop HP 250 G9', qty:2, tangible:true, ensamble:false, i:620, x:615, d:610, o:630, precioDirecto:0 },
-    { id: 2, cat:'T', nombre:'Monitor 24 pulg FHD', qty:3, tangible:true, ensamble:false, i:180, x:175, d:182, o:190, precioDirecto:0 },
-    { id: 3, cat:'T', nombre:'CPU Placa Madre', qty:1, tangible:true, ensamble:true, i:250, x:250, d:250, o:250, precioDirecto:0 },
-    { id: 4, cat:'T', nombre:'CPU Procesador', qty:1, tangible:true, ensamble:true, i:180, x:175, d:178, o:182, precioDirecto:0 },
-    { id: 5, cat:'L', nombre:'Windows 11 Pro OEM', qty:2, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:320 },
-    { id: 6, cat:'S', nombre:'Soporte Tecnico 1h', qty:1, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:80 },
-    { id: 7, cat:'V', nombre:'Visita Presencial', qty:1, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:0 }
+    { id: 1, cat:'T', nombre:'Laptop HP 250 G9', qty:2, tangible:true, ensamble:false, i:620, x:615, d:610, o:630, precioDirecto:0, selected:false },
+    { id: 2, cat:'T', nombre:'Monitor 24 pulg FHD', qty:3, tangible:true, ensamble:false, i:180, x:175, d:182, o:190, precioDirecto:0, selected:false },
+    { id: 3, cat:'T', nombre:'CPU Placa Madre', qty:1, tangible:true, ensamble:true, i:250, x:250, d:250, o:250, precioDirecto:0, selected:false },
+    { id: 4, cat:'T', nombre:'CPU Procesador', qty:1, tangible:true, ensamble:true, i:180, x:175, d:178, o:182, precioDirecto:0, selected:false },
+    { id: 5, cat:'L', nombre:'Windows 11 Pro OEM', qty:2, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:320, selected:false },
+    { id: 6, cat:'S', nombre:'Soporte Tecnico 1h', qty:1, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:80, selected:false },
+    { id: 7, cat:'V', nombre:'Visita Presencial', qty:1, tangible:false, ensamble:false, i:0, x:0, d:0, o:0, precioDirecto:0, selected:false }
   ];
   nextId = 8;
   byId('manoObraTotal').value = 150;
@@ -767,7 +1319,30 @@ function buildQuoteHtmlDocument(nota, tc, margen, productosArr, ctx, totPV, totG
   return htmlParts.join('');
 }
 
-function descargarHtml(htmlFinal, nombreArchivo){
+// ============================================================
+// DESCARGA DE ARCHIVOS: permite elegir carpeta de destino cuando el
+// navegador lo soporta (File System Access API, Chrome/Edge). Si no esta
+// disponible (Firefox/Safari, o bloqueado por politicas del entorno),
+// hace fallback automatico a la descarga estandar del navegador.
+// ============================================================
+async function descargarHtml(htmlFinal, nombreArchivo){
+  if(window.showSaveFilePicker){
+    try{
+      var handle = await window.showSaveFilePicker({
+        suggestedName: nombreArchivo,
+        types: [{ description: 'Archivo HTML', accept: { 'text/html': ['.html'] } }]
+      });
+      var writable = await handle.createWritable();
+      await writable.write(htmlFinal);
+      await writable.close();
+      return;
+    } catch(err){
+      if(err && err.name === 'AbortError'){
+        return;
+      }
+      console.warn('Selector de carpeta no disponible en este entorno, se uso la descarga estandar.', err);
+    }
+  }
   var blob = new Blob([htmlFinal], { type: 'text/html;charset=utf-8' });
   var link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -776,6 +1351,80 @@ function descargarHtml(htmlFinal, nombreArchivo){
   link.click();
   document.body.removeChild(link);
   URL.revokeObjectURL(link.href);
+}
+
+function buildAlternativasHtmlDocument(nota, alternativasArr){
+  var cols = '';
+  var i;
+  for(i=0;i<alternativasArr.length;i++){
+    var a = alternativasArr[i];
+    cols += '<th style="padding:9px;text-align:center;background:' + (i===0?'#eaf3fe':'#f8fafc') +
+      ';font-size:11px;color:#152B44;border-bottom:2px solid #1A86F1">' + a.nombre +
+      (a.recommended ? '<br><span style="display:inline-block;margin-top:4px;background:#dcfce7;color:#15803d;font-size:9px;font-weight:800;padding:2px 8px;border-radius:999px;text-transform:uppercase">Recomendada</span>' : '') +
+      '</th>';
+  }
+
+  var resultados = [];
+  for(i=0;i<alternativasArr.length;i++){ resultados.push(calcularAlternativa(alternativasArr[i])); }
+  var basePV = resultados.length ? resultados[0].PVNeto : 0;
+
+  function filaHtml(label, celdas){
+    var row = '<tr><td style="padding:8px 12px;font-weight:700;color:#64748b;font-size:11px;text-transform:uppercase;background:#f8fafc;border-bottom:1px solid #e2e8f0">' + label + '</td>';
+    for(var j=0;j<celdas.length;j++){
+      row += '<td style="padding:8px 12px;text-align:center;border-bottom:1px solid #e2e8f0">' + celdas[j] + '</td>';
+    }
+    row += '</tr>';
+    return row;
+  }
+
+  var body = '';
+  body += filaHtml('Descripcion', alternativasArr.map(function(a){ return a.descripcion || '-'; }));
+  body += filaHtml('Tipo de Cambio (S/. a US$)', alternativasArr.map(function(a){ return fmt(a.tc,2); }));
+  body += filaHtml('Costo Proveedor Neto (S/.)', resultados.map(function(r){ return 'S/. ' + fmt(r.costoNeto); }));
+  body += filaHtml('Margen Comercial %', alternativasArr.map(function(a){ return (parseFloat(a.margen)||0) + '%'; }));
+  body += filaHtml('Utilidad Nominal (S/.)', resultados.map(function(r){ return 'S/. ' + fmt(r.utilidadNominal); }));
+  body += filaHtml('P.V. Unit. Neto (S/.)', resultados.map(function(r){ return '<b style="color:#152B44">S/. ' + fmt(r.PVNeto) + '</b>'; }));
+  body += filaHtml('P.V. Unit. Bruto c/Imp. (S/.)', resultados.map(function(r){ return 'S/. ' + fmt(r.PVBrutoLocal); }));
+  body += filaHtml('Precio de Venta (US$)', resultados.map(function(r){ return '<b style="color:#106FCC">$ ' + fmt(r.PVNetoUSD) + '</b>'; }));
+  body += filaHtml('P.V. Unit. Bruto c/Imp. (US$)', resultados.map(function(r){ return '<b style="color:#106FCC">$ ' + fmt(r.PVBrutoUSD) + '</b>'; }));
+  body += filaHtml('Variacion vs Opcion 1', resultados.map(function(r, idx){
+    if(idx === 0) return 'Base';
+    var pct = basePV > 0 ? ((r.PVNeto - basePV) / basePV) * 100 : 0;
+    var color = pct > 0 ? '#dc2626' : (pct < 0 ? '#16a34a' : '#64748b');
+    var sign = pct > 0 ? '+' : '';
+    return '<span style="color:' + color + ';font-weight:700">' + sign + pct.toFixed(1) + '%</span>';
+  }));
+
+  var htmlParts = [];
+  htmlParts.push('<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Cotizacion Comparativa - ' + nota + '</title></head>');
+  htmlParts.push('<body style="background:#f4f6f9;color:#1e293b;font-family:Segoe UI,sans-serif;padding:30px">');
+  htmlParts.push('<div style="max-width:1000px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(21,43,68,.08)">');
+  htmlParts.push('<div style="background:#f8fafc;padding:20px 26px;border-bottom:2px solid #1A86F1">');
+  htmlParts.push('<h1 style="margin:0;font-size:18px;color:#152B44">Cotizacion Comparativa COSEINCO</h1>');
+  htmlParts.push('<p style="margin:6px 0 0;font-size:12px;color:#64748b">' + nota + '</p>');
+  htmlParts.push('<p style="margin:2px 0 0;font-size:11px;color:#64748b">' + alternativasArr.length + ' alternativa(s) comparadas, cada una con su propio tipo de cambio</p>');
+  htmlParts.push('</div>');
+  htmlParts.push('<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">');
+  htmlParts.push('<thead><tr><th style="padding:9px;background:#f8fafc;border-bottom:1px solid #e2e8f0"></th>' + cols + '</tr></thead>');
+  htmlParts.push('<tbody>' + body + '</tbody>');
+  htmlParts.push('</table></div>');
+  htmlParts.push('<div style="background:#152B44;padding:14px 26px;text-align:center">');
+  htmlParts.push('<span style="font-size:11px;color:#93c5fd">Documento generado por COSEINCO - Calculadora de Precio de Venta</span>');
+  htmlParts.push('</div>');
+  htmlParts.push('</div>');
+  htmlParts.push('</body></html>');
+  return htmlParts.join('');
+}
+
+function exportarAlternativasHTML(){
+  if(alternativas.length === 0){
+    alert('Agrega al menos una alternativa antes de exportar.');
+    return;
+  }
+  var nota = byId('notaRapida').value || 'Sin nota';
+  var htmlFinal = buildAlternativasHtmlDocument(nota, alternativas);
+  var safeName = nota.replace(/\s+/g, '_').toLowerCase();
+  descargarHtml(htmlFinal, 'cotizacion_comparativa_' + safeName + '.html');
 }
 
 function exportarHTML(){
@@ -806,18 +1455,22 @@ function renderHistorial(){
     return;
   }
 
-  var html = '<div class="tbl-outer"><div class="tbl-inner"><table style="min-width:900px">';
+  var html = '<div class="tbl-outer"><div class="tbl-inner"><table style="min-width:950px">';
   html += '<thead><tr>' +
-    '<th>Fecha</th><th>Cliente / Nota</th><th>Items</th>' +
+    '<th>Fecha</th><th>Tipo</th><th>Cliente / Nota</th><th>Items</th>' +
     '<th>PV Total (S/.)</th><th>Ganancia (S/.)</th><th>Acciones</th>' +
     '</tr></thead><tbody>';
 
   for(var i=0; i<historial.length; i++){
     var h = historial[i];
+    var esAlt = h.tipo === 'alternativas';
+    var itemCount = esAlt ? h.alternativas.length : h.productos.length;
+    var itemLabel = esAlt ? (itemCount + ' alternativa(s)') : (itemCount + ' item(s)');
     html += '<tr>';
     html += '<td>' + fechaCorta(h.fecha) + '</td>';
+    html += '<td><span class="badge-type ' + (esAlt ? 'alternativas' : 'agrupado') + '">' + (esAlt ? 'Alternativas' : 'Agrupado') + '</span></td>';
     html += '<td><strong>' + h.nota + '</strong></td>';
-    html += '<td class="num">' + h.productos.length + '</td>';
+    html += '<td class="num">' + itemLabel + '</td>';
     html += '<td class="num" style="font-weight:700;color:var(--blue-dark)">S/. ' + fmt(h.totales.pv) + '</td>';
     html += '<td class="num g-pos">S/. ' + fmt(h.totales.gan) + '</td>';
     html += '<td>' +
@@ -841,25 +1494,37 @@ function buscarEnHistorial(id){
 function historialCargar(id){
   var h = buscarEnHistorial(id);
   if(!h) return;
+  var esAlt = h.tipo === 'alternativas';
 
   function cargar(){
-    productos = JSON.parse(JSON.stringify(h.productos));
-    var maxId = 0;
-    for(var i=0; i<productos.length; i++){ if(productos[i].id > maxId) maxId = productos[i].id; }
-    nextId = maxId + 1;
-    byId('notaRapida').value = h.nota;
-    byId('tc').value = h.params.tc;
-    byId('margen').value = h.params.margen;
-    byId('manoObraTotal').value = h.params.manoObraTotal;
-    byId('visita').value = h.params.visita;
-    byId('fleteIngram').value = h.params.fleteIngram;
-    byId('fleteIntcomex').value = h.params.fleteIntcomex;
-    byId('fleteDeltron').value = h.params.fleteDeltron;
-    byId('fleteOtros').value = h.params.fleteOtros;
-    setLocked(false);
+    if(esAlt){
+      alternativas = JSON.parse(JSON.stringify(h.alternativas));
+      var maxAltId = 0;
+      for(var i=0;i<alternativas.length;i++){ if(alternativas[i].id > maxAltId) maxAltId = alternativas[i].id; }
+      nextAltId = maxAltId + 1;
+      byId('notaRapida').value = h.nota;
+      setModo('alternativas');
+      setLocked(false);
+    } else {
+      productos = JSON.parse(JSON.stringify(h.productos));
+      var maxId = 0;
+      for(var j=0;j<productos.length;j++){ if(productos[j].id > maxId) maxId = productos[j].id; }
+      nextId = maxId + 1;
+      byId('notaRapida').value = h.nota;
+      byId('tc').value = h.params.tc;
+      byId('margen').value = h.params.margen;
+      byId('manoObraTotal').value = h.params.manoObraTotal;
+      byId('visita').value = h.params.visita;
+      byId('fleteIngram').value = h.params.fleteIngram;
+      byId('fleteIntcomex').value = h.params.fleteIntcomex;
+      byId('fleteDeltron').value = h.params.fleteDeltron;
+      byId('fleteOtros').value = h.params.fleteOtros;
+      setModo('agrupado');
+      setLocked(false);
+    }
   }
 
-  if(productos.length > 0){
+  if(productos.length > 0 || alternativas.length > 0){
     showConfirm('Se reemplazara la cotizacion actual en edicion por la cotizacion guardada "' + h.nota + '". Continuar?', cargar);
   } else {
     cargar();
@@ -869,6 +1534,14 @@ function historialCargar(id){
 function historialExportarHtml(id){
   var h = buscarEnHistorial(id);
   if(!h) return;
+
+  if(h.tipo === 'alternativas'){
+    var htmlFinalAlt = buildAlternativasHtmlDocument(h.nota, h.alternativas);
+    var safeNameAlt = h.nota.replace(/\s+/g, '_').toLowerCase();
+    descargarHtml(htmlFinalAlt, 'cotizacion_comparativa_' + safeNameAlt + '.html');
+    return;
+  }
+
   var fletesGlobal = [h.params.fleteIngram, h.params.fleteIntcomex, h.params.fleteDeltron, h.params.fleteOtros];
   var fleteMap = calcularFletesPorProveedor(h.productos, fletesGlobal);
   var moMap = calcularManoObraPorProducto(h.productos, h.params.tc, h.params.manoObraTotal, fletesGlobal);
@@ -909,6 +1582,21 @@ window.hideConfirm = hideConfirm;
 window.historialCargar = historialCargar;
 window.historialExportarHtml = historialExportarHtml;
 window.historialEliminar = historialEliminar;
+window.setModo = setModo;
+window.agregarAlternativa = agregarAlternativa;
+window.eliminarAlternativa = eliminarAlternativa;
+window.marcarRecomendada = marcarRecomendada;
+window.exportarAlternativasHTML = exportarAlternativasHTML;
+window.renderComparativa = renderComparativa;
+window.transferirProductosSeleccionados = transferirProductosSeleccionados;
+window.toggleCalcPanel = toggleCalcPanel;
+window.showCalcTab = showCalcTab;
+window.calcAppend = calcAppend;
+window.calcBackspace = calcBackspace;
+window.calcClear = calcClear;
+window.calcEquals = calcEquals;
+window.taxQuitarImpuesto = taxQuitarImpuesto;
+window.taxAgregarImpuesto = taxAgregarImpuesto;
 </script>
 </body>
 </html>
