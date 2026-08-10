@@ -236,6 +236,10 @@
       <label>Cliente / N. Cotizacion / Nota Rapida</label>
       <input type="text" id="notaRapida" class="lockable" placeholder="Ej: S04000" oninput="recalcularTodo()">
     </div>
+    <div class="quick-note">
+      <label>Telefono WhatsApp del Cliente (opcional)</label>
+      <input type="text" id="whatsappTel" class="lockable" placeholder="Ej: 51987654321">
+    </div>
   </header>
 
   <div class="status-bar">
@@ -338,8 +342,10 @@
   <div class="card modo-agrupado" style="text-align:center">
     <button class="btn btn-green" onclick="exportarHTML()">Exportar como HTML</button>
     <button class="btn btn-ghost" style="margin-left:10px" onclick="agregarDemo()">Cargar datos de ejemplo</button>
+    <button class="btn btn-blue" style="margin-left:10px;background:#25D366" onclick="enviarPorWhatsApp('agrupado')">Enviar por WhatsApp</button>
     <div style="font-size:10.5px;color:var(--txt-muted);margin-top:10px">
-      En Chrome o Edge se abrira el dialogo nativo para elegir la carpeta de guardado. En otros navegadores se usara la descarga estandar.
+      En Chrome o Edge se abrira el dialogo nativo para elegir la carpeta de guardado. En otros navegadores se usara la descarga estandar.<br>
+      WhatsApp envia un resumen de texto; el archivo HTML se comparte por separado (adjuntalo manualmente si lo necesitas).
     </div>
   </div>
 
@@ -376,6 +382,7 @@
 
     <div class="form-actions" style="margin-top:16px">
       <button class="btn btn-ghost" onclick="exportarAlternativasHTML()">Exportar Comparativa como HTML</button>
+      <button class="btn" style="background:#25D366;color:#fff;margin-left:10px" onclick="enviarPorWhatsApp('alternativas')">Enviar por WhatsApp</button>
     </div>
   </div>
 
@@ -1272,8 +1279,96 @@ function agregarDemo(){
 }
 
 // ============================================================
-// GENERADOR DE DOCUMENTO HTML DE COTIZACION (reutilizable)
+// INTEGRACION CON WHATSAPP (click-to-chat via wa.me)
+// Nota: WhatsApp no permite adjuntar archivos mediante enlaces wa.me.
+// Se envia un resumen en texto plano; el HTML se comparte por separado.
 // ============================================================
+function limpiarTelefono(str){
+  return String(str||'').replace(/[^0-9]/g, '');
+}
+
+function abrirWhatsApp(mensaje){
+  var tel = limpiarTelefono(byId('whatsappTel').value);
+  var texto = encodeURIComponent(mensaje);
+  var url = tel ? ('https://wa.me/' + tel + '?text=' + texto) : ('https://wa.me/?text=' + texto);
+  window.open(url, '_blank');
+}
+
+function buildMensajeAgrupado(nota, productosArr, ctx, totPV, totGan){
+  var tcRow = ctx.tc;
+  var lineas = [];
+  lineas.push('*Cotizacion COSEINCO*');
+  lineas.push(nota);
+  lineas.push('');
+  for(var i=0;i<productosArr.length;i++){
+    var p = productosArr[i];
+    var r = calcularFila(p, ctx);
+    var pvTotalUSD = tcRow > 0 ? (r.pvTotal / tcRow) : 0;
+    lineas.push('- ' + p.nombre + ' (x' + p.qty + '): S/. ' + fmt(r.pvTotal) + ' | $ ' + fmt(pvTotalUSD));
+  }
+  lineas.push('');
+  lineas.push('*TOTAL: S/. ' + fmt(totPV) + '*');
+  var totUSD = tcRow > 0 ? (totPV / tcRow) : 0;
+  lineas.push('*TOTAL: $ ' + fmt(totUSD) + '*');
+  lineas.push('');
+  lineas.push('Gracias por su preferencia.');
+  return lineas.join('\n');
+}
+
+function buildMensajeAlternativas(nota, alternativasArr){
+  var lineas = [];
+  lineas.push('*Cotizacion Comparativa COSEINCO*');
+  lineas.push(nota);
+  lineas.push('');
+  for(var i=0;i<alternativasArr.length;i++){
+    var a = alternativasArr[i];
+    var r = calcularAlternativa(a);
+    var reco = a.recommended ? ' (Recomendada)' : '';
+    lineas.push((i+1) + '. ' + a.nombre + reco);
+    if(a.descripcion) lineas.push('   ' + a.descripcion);
+    lineas.push('   S/. ' + fmt(r.PVNeto) + ' | $ ' + fmt(r.PVNetoUSD));
+    lineas.push('');
+  }
+  lineas.push('Elija la opcion que mejor se ajuste a su presupuesto.');
+  return lineas.join('\n');
+}
+
+function enviarPorWhatsApp(modo){
+  var nota = byId('notaRapida').value || 'Sin nota';
+  if(modo === 'alternativas'){
+    if(alternativas.length === 0){
+      alert('Agrega al menos una alternativa antes de enviar.');
+      return;
+    }
+    abrirWhatsApp(buildMensajeAlternativas(nota, alternativas));
+    return;
+  }
+  if(productos.length === 0){
+    alert('Agrega al menos un producto antes de enviar.');
+    return;
+  }
+  if(!lastCtx){
+    alert('No se pudo calcular el contexto actual. Intenta de nuevo.');
+    return;
+  }
+  abrirWhatsApp(buildMensajeAgrupado(nota, productos, lastCtx, lastTotals.pv, lastTotals.gan));
+}
+
+function historialEnviarWhatsApp(id){
+  var h = buscarEnHistorial(id);
+  if(!h) return;
+
+  if(h.tipo === 'alternativas'){
+    abrirWhatsApp(buildMensajeAlternativas(h.nota, h.alternativas));
+    return;
+  }
+
+  var fletesGlobal = [h.params.fleteIngram, h.params.fleteIntcomex, h.params.fleteDeltron, h.params.fleteOtros];
+  var fleteMap = calcularFletesPorProveedor(h.productos, fletesGlobal);
+  var moMap = calcularManoObraPorProducto(h.productos, h.params.tc, h.params.manoObraTotal, fletesGlobal);
+  var ctx = { tc: h.params.tc, margen: h.params.margen/100, fletesGlobal: fletesGlobal, fleteMap: fleteMap, moMap: moMap, visita: h.params.visita };
+  abrirWhatsApp(buildMensajeAgrupado(h.nota, h.productos, ctx, h.totales.pv, h.totales.gan));
+}
 function buildQuoteHtmlDocument(nota, tc, margen, productosArr, ctx, totPV, totGan){
   var filas = '';
   for(var i=0; i<productosArr.length; i++){
@@ -1476,6 +1571,7 @@ function renderHistorial(){
     html += '<td>' +
       '<button class="btn btn-ghost btn-sm" onclick="historialCargar(\'' + h.id + '\')">Cargar</button> ' +
       '<button class="btn btn-blue btn-sm" onclick="historialExportarHtml(\'' + h.id + '\')">Exportar HTML</button> ' +
+      '<button class="btn btn-sm" style="background:#25D366;color:#fff" onclick="historialEnviarWhatsApp(\'' + h.id + '\')">WhatsApp</button> ' +
       '<button class="btn btn-danger btn-sm" onclick="historialEliminar(\'' + h.id + '\')">Eliminar</button>' +
       '</td>';
     html += '</tr>';
@@ -1597,6 +1693,8 @@ window.calcClear = calcClear;
 window.calcEquals = calcEquals;
 window.taxQuitarImpuesto = taxQuitarImpuesto;
 window.taxAgregarImpuesto = taxAgregarImpuesto;
+window.enviarPorWhatsApp = enviarPorWhatsApp;
+window.historialEnviarWhatsApp = historialEnviarWhatsApp;
 </script>
 </body>
 </html>
