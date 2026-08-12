@@ -476,6 +476,98 @@ var lastTotals = { costo: 0, pv: 0, gan: 0 };
 var alternativas = [];
 var nextAltId = 1;
 var modoCotizacion = 'agrupado';
+
+// ============================================================
+// PERSISTENCIA: window.storage (NO usar localStorage, bloqueado en este entorno)
+// Se guarda: Historial completo + borrador de la cotizacion en curso, para
+// que nada se pierda al refrescar o cerrar la pestana.
+// ============================================================
+var STORAGE_KEY_HIST = 'cpv:historial';
+var STORAGE_KEY_DRAFT = 'cpv:draft';
+var storageAvailable = (typeof window !== 'undefined' && window.storage &&
+  typeof window.storage.get === 'function' && typeof window.storage.set === 'function');
+var draftSaveTimer = null;
+
+async function guardarHistorialStorage(){
+  if(!storageAvailable) return;
+  try{ await window.storage.set(STORAGE_KEY_HIST, JSON.stringify(historial), false); }
+  catch(e){ console.warn('No se pudo guardar el historial en almacenamiento persistente:', e); }
+}
+
+async function cargarHistorialStorage(){
+  if(!storageAvailable) return;
+  try{
+    var res = await window.storage.get(STORAGE_KEY_HIST, false);
+    if(res && res.value){
+      var parsed = JSON.parse(res.value);
+      if(Array.isArray(parsed)) historial = parsed;
+    }
+  } catch(e){ /* clave aun no existe, se mantiene historial vacio */ }
+}
+
+function buildDraftSnapshot(){
+  return {
+    productos: productos,
+    alternativas: alternativas,
+    nextId: nextId,
+    nextAltId: nextAltId,
+    nota: byId('notaRapida') ? byId('notaRapida').value : '',
+    tel: byId('whatsappTel') ? byId('whatsappTel').value : '',
+    modo: modoCotizacion,
+    isLocked: isLocked,
+    params: {
+      tc: gv('tc'), margen: gv('margen'), manoObraTotal: gv('manoObraTotal'), visita: gv('visita'),
+      fleteIngram: gv('fleteIngram'), fleteIntcomex: gv('fleteIntcomex'), fleteDeltron: gv('fleteDeltron'), fleteOtros: gv('fleteOtros'),
+      escDescuento: gv('escDescuento'), escTC: gv('escTC'), escMargen: gv('escMargen')
+    }
+  };
+}
+
+async function guardarDraftStorage(){
+  if(!storageAvailable) return;
+  try{ await window.storage.set(STORAGE_KEY_DRAFT, JSON.stringify(buildDraftSnapshot()), false); }
+  catch(e){ console.warn('No se pudo guardar el borrador en almacenamiento persistente:', e); }
+}
+
+function scheduleDraftSave(){
+  if(!storageAvailable) return;
+  if(draftSaveTimer) clearTimeout(draftSaveTimer);
+  draftSaveTimer = setTimeout(function(){ guardarDraftStorage(); }, 900);
+}
+
+async function cargarDraftStorage(){
+  if(!storageAvailable) return false;
+  try{
+    var res = await window.storage.get(STORAGE_KEY_DRAFT, false);
+    if(!res || !res.value) return false;
+    var d = JSON.parse(res.value);
+    if(!d) return false;
+    productos = Array.isArray(d.productos) ? d.productos : [];
+    alternativas = Array.isArray(d.alternativas) ? d.alternativas : [];
+    nextId = d.nextId || 1;
+    nextAltId = d.nextAltId || 1;
+    if(byId('notaRapida')) byId('notaRapida').value = d.nota || '';
+    if(byId('whatsappTel')) byId('whatsappTel').value = d.tel || '';
+    if(d.params){
+      byId('tc').value = d.params.tc != null ? d.params.tc : 3.75;
+      byId('margen').value = d.params.margen != null ? d.params.margen : 20;
+      byId('manoObraTotal').value = d.params.manoObraTotal != null ? d.params.manoObraTotal : 0;
+      byId('visita').value = d.params.visita != null ? d.params.visita : 0;
+      byId('fleteIngram').value = d.params.fleteIngram != null ? d.params.fleteIngram : 80;
+      byId('fleteIntcomex').value = d.params.fleteIntcomex != null ? d.params.fleteIntcomex : 50;
+      byId('fleteDeltron').value = d.params.fleteDeltron != null ? d.params.fleteDeltron : 30;
+      byId('fleteOtros').value = d.params.fleteOtros != null ? d.params.fleteOtros : 40;
+      byId('escDescuento').value = d.params.escDescuento != null ? d.params.escDescuento : 5;
+      byId('escTC').value = d.params.escTC != null ? d.params.escTC : 3.85;
+      byId('escMargen').value = d.params.escMargen != null ? d.params.escMargen : 28;
+    }
+    modoCotizacion = d.modo === 'alternativas' ? 'alternativas' : 'agrupado';
+    isLocked = !!d.isLocked;
+    return true;
+  } catch(e){
+    return false;
+  }
+}
 var PROVEEDORES = ['Ingram', 'Intcomex', 'Deltron', 'Otros'];
 var PROV_KEYS = ['i', 'x', 'd', 'o'];
 var FLETE_IDS = ['fleteIngram', 'fleteIntcomex', 'fleteDeltron', 'fleteOtros'];
@@ -572,6 +664,7 @@ function guardarCotizacion(){
     historial.unshift(snapAlt);
     setLocked(true);
     renderHistorial();
+    guardarHistorialStorage();
     return;
   }
 
@@ -594,6 +687,7 @@ function guardarCotizacion(){
   historial.unshift(snap);
   setLocked(true);
   renderHistorial();
+  guardarHistorialStorage();
 }
 
 function editarCotizacion(){
@@ -832,6 +926,7 @@ function recalcularTodo(){
   lastTotals = { costo: totCosto, pv: totPVTotal, gan: totGanancia };
 
   renderEscenarios(ctx, totPVTotal, totGanancia);
+  scheduleDraftSave();
 }
 
 function sumScenario(ctx){
@@ -905,6 +1000,7 @@ function setModo(m){
     byId('btnModoAlternativas').classList.add('active');
     renderComparativa();
   }
+  scheduleDraftSave();
 }
 
 // ============================================================
@@ -1081,6 +1177,7 @@ function taxAgregarImpuesto(){
 function renderComparativa(){
   var tabla = byId('altComparativaTable');
   if(!tabla) return;
+  scheduleDraftSave();
 
   if(alternativas.length === 0){
     tabla.innerHTML = '<tbody><tr><td style="padding:30px;text-align:center;color:var(--txt-muted)">' +
@@ -1656,12 +1753,20 @@ function historialEliminar(id){
     }
     historial = nuevos;
     renderHistorial();
+    guardarHistorialStorage();
   });
 }
 
-onCatChange();
-recalcularTodo();
-renderHistorial();
+(async function initApp(){
+  onCatChange();
+  await cargarHistorialStorage();
+  await cargarDraftStorage();
+  setModo(modoCotizacion);
+  recalcularTodo();
+  renderComparativa();
+  renderHistorial();
+  if(isLocked){ setLocked(true); }
+})();
 
 window.onCatChange = onCatChange;
 window.setLocked = setLocked;
